@@ -42,24 +42,22 @@ void Player::get_info()
 
 void start_game() {
 
+    VertexArray plates(Quads, 1024);
 
     // Завантажуємо схему рівня
     int** level = load_map_plan();
-
     print_matrix(level, 16);
+
     // Створюємо гравця
-    Player player(500.0, 500.0, 0.1);
+    Player player(0, 0, 1);
+    CircleShape player_body(8);
+    player_body.setFillColor(Color(0,255,123));
+    VertexArray pl_dir(Lines, 2);
+    pl_dir[0].position = player.cords;
+    pl_dir[1].position = Vector2f(player.cords.x + 15*cos(player.dir), player.cords.x + 15 * sin(player.dir));
 
     // Масив довжин променів
     int* rays = new int[WIN_WIDTH];
-
-    // test
-    VertexArray line(Lines, 2);
-    line[0].color = Color(255, 0, 0);
-    line[1].color = Color(255, 0, 0);
-    line[0].position = Vector2f(0, 0);
-    line[1].position = Vector2f(0, 200);
-
 
     // Масив вершин зображення
     VertexArray projection(Lines, WIN_WIDTH * 2);
@@ -68,7 +66,7 @@ void start_game() {
     settings.antialiasingLevel = 8;
 
     // Створюємо вікно
-    RenderWindow window(VideoMode(WIN_WIDTH, WIN_HEIGHT), "RayCastingGameEngine", Style::Default, settings);
+    RenderWindow window(VideoMode(512, 512), "RayCastingGameEngine", Style::Default, settings);
     window.setFramerateLimit(60);
 
     // Головний цикл програми
@@ -90,10 +88,17 @@ void start_game() {
 
         if (Keyboard::isKeyPressed(Keyboard::P)) player.get_info();
 
+        draw_minimap(level, plates);
+        player_body.setPosition(Vector2f(player.cords.x - 8, player.cords.y - 8));
+        pl_dir[0].position = player.cords;
+        pl_dir[1].position = Vector2f(player.cords.x + 15 * cos(player.dir), player.cords.y + 15 * sin(player.dir));
+
         // Оновлюємо зображення
         window.clear();
         window.draw(projection);
-        window.draw(line);
+        window.draw(plates);
+        window.draw(player_body);
+        window.draw(pl_dir);
         window.display();
     }
 }
@@ -103,10 +108,9 @@ int** load_map_plan()
     ifstream file;
     string n_str; // Розмір рівня рядком
     string cell_str;
-    int cell;
-    int level_size; // Розмір рівня 
+    int cell;  
     int** level;
-
+    int level_size; // Розмір рівня  
 
     file.open("../data/levels/level.csv");
 
@@ -139,19 +143,34 @@ int** load_map_plan()
     return level;
 }
 
-
-void  horizontal_intersections(Player p, int** map, int* hor_width)
+void draw_minimap(int** map, VertexArray & plates)
 {
-    double a = p.dir - FOV / 2;
 
-    for (int i = 0; i < WIN_WIDTH; i++)
+    for (int i = 0; i < 16; i++)
     {
-        if (a <= PI)
+        for (int j = 0; j < 16; j++)
         {
-
+            if (map[i][j])
+            {
+                plates[(i * 16 + j) * 4 + 0].color = Color(2, 255, 255);
+                plates[(i * 16 + j) * 4 + 1].color = Color(2, 255, 255);
+                plates[(i * 16 + j) * 4 + 2].color = Color(2, 255, 255);
+                plates[(i * 16 + j) * 4 + 3].color = Color(2, 255, 255);
+            }
+            else {
+                plates[(i * 16 + j) * 4 + 0].color = Color(123, 0, 0);
+                plates[(i * 16 + j) * 4 + 1].color = Color(123, 0, 0);
+                plates[(i * 16 + j) * 4 + 2].color = Color(123, 0, 0);
+                plates[(i * 16 + j) * 4 + 3].color = Color(123, 0, 0);
+            }
+            plates[(i * 16 + j) * 4 + 0].position = Vector2f((j)     * 32, (i)     * 32);
+            plates[(i * 16 + j) * 4 + 1].position = Vector2f((j + 1) * 32, (i)     * 32);
+            plates[(i * 16 + j) * 4 + 2].position = Vector2f((j + 1) * 32, (i + 1) * 32);
+            plates[(i * 16 + j) * 4 + 3].position = Vector2f((j)     * 32, (i + 1) * 32);
         }
     }
 }
+
 
 template <typename T>
 void print_matrix(T** arr, int n) {

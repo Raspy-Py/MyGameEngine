@@ -17,14 +17,15 @@ const double FOV = 60 * PI / 180;
 const double WTP = WIN_WIDTH / (2 * tan(FOV * PI / 360)); // Відстань від гравця до площини проектування зображення
 const double ABR = 60.0 / 320 * PI / 180; // Кут між сусідніми променями
 
+
 template <typename T>
 void print_matrix(T** arr, int n); // Функція для налагодження
 template <typename T>
 void print_vector(T*, int);
 
-double lerp(double A, double B, double t); // Інтерполяція (потім видалю)
 void start_game(); // Головна функція гри 
 int** load_map_plan(); // Завантаження мапи з файлу в оперативну пам'ять
+void draw_minimap(int**, VertexArray&); // Відобаражає мінікарту рівня
 
 class Player {
 
@@ -39,7 +40,7 @@ public:
 
 private:
     double speed;
-    double rotationSpeed = 1 * PI / 180;
+    double rotationSpeed = 5 * PI / 180;
 };
 
 //class Map
