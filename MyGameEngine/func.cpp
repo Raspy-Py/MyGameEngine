@@ -39,19 +39,19 @@ void Player::get_info()
 
 void Player::cast_rays(int** level, RenderWindow& window)
 {
-    float x0 = cords.x, y0 = cords.y; // Координати гравця
-    float xa = 0, ya = 0; // Координати першого перетину променя із сіткою
-    float dx, dy; // Крок
+    double x0 = cords.x, y0 = cords.y; // Координати гравця
+    double xa = 0, ya = 0; // Координати першого перетину променя із сіткою
+    double dx, dy; // Крок
     double ra; // Напрямок промення в радіанах
-    float tanAlpha;
+    double tanAlpha;
     int iter = 1; // Максимальна к-ть ітерацій на промінь
     int h=0, c;
     Vector2f infty(10000,10000);
 
-    VertexArray singleRay(Lines, WIN_WIDTH*2); // Пустимо один промінь для налагодження 
+    VertexArray singleRay(Lines, WIN_WIDTH*2); 
     
     
-    float xh, yh,xv,yv; 
+    double xh, yh,xv,yv;
 
     for (double i = dir - FOV / 2; i < dir + FOV / 2 - 0.0001; i += ABR, h+=1)
     {
@@ -68,14 +68,14 @@ void Player::cast_rays(int** level, RenderWindow& window)
         tanAlpha = tan(ra);
         if (ra < P2 || ra > P3) // Промінь випущено вправо
         {
-            xa = (int(x0) / 32) * 32 + 32;
+            xa = double(int(x0) / 32) * 32 + 32;
             ya = (xa - x0) * tanAlpha + y0;
             dy = 32 * tanAlpha;
             dx = 32;
         }
         else if (ra > P2 || ra < P3) // Промінь випущено вліво
         {
-            xa = (int(x0) / 32) * 32 - 1;
+            xa = double(int(x0) / 32) * 32 - 1;
             ya = (xa - x0) * tanAlpha + y0;
             dy = -32 * tanAlpha;
             dx = -32;
@@ -101,14 +101,14 @@ void Player::cast_rays(int** level, RenderWindow& window)
 
         // Перетин з горизонтальними лініями
         tanAlpha = tan(P2 - ra);
-        if (ra < PI) // Промінь випущено вниз
+        if (ra < PI && ra > 0) // Промінь випущено вниз
         {
             ya = (int(y0) / 32) * 32 + 32;
             xa = (ya - y0) * tanAlpha + x0;
             dx = 32 * tanAlpha;
             dy = 32;
         }
-        else if (ra > PI) // Промінь випущено вверх
+        else if (ra > PI && ra < PI * 2) // Промінь випущено вверх
         {
             ya = (int(y0) / 32) * 32 - 1;
             xa = (ya - y0) * tanAlpha + x0;
@@ -137,22 +137,58 @@ void Player::cast_rays(int** level, RenderWindow& window)
         if (dist_to_player(xh, yh) > dist_to_player(xv, yv))
         {
             end_cords[c/2] = Vector2f(xv, yv);
+            rays_lenth[c / 2] = dist_to_player(xv, yv) * cos(i - dir);
         }
         else {
             end_cords[c / 2] = Vector2f(xh, yh);
+            rays_lenth[c / 2] = dist_to_player(xh, yh) * cos(i-dir);
         }       
     }
 }
 
-float Player::dist_to_player(float x, float y)
+double Player::dist_to_player(double x, double y)
 {
     return sqrt((cords.x - x)*(cords.x - x) + (cords.y-y)*(cords.y-y));
 }
 
-
 // Базові функції 
 
+void draw_image(int* rays_lenth, VertexArray& image)
+{
+    float wallSectionSize;
+    int light;
+
+    for (int i = 0; i < WIN_WIDTH; i++)
+    {
+        wallSectionSize = (16.0 * WTP ) / rays_lenth[i];
+        image[i * 2].position = Vector2f(512 + i, 256 - wallSectionSize);
+        image[i * 2 + 1].position = Vector2f(512 + i, 256 + wallSectionSize);
+        light = 20 + 235 * pow((1 - float(rays_lenth[i]) / 512), 4);
+        image[i * 2].color = Color(light, light, light);
+        image[i * 2 + 1].color = Color(light, light, light);
+    }
+}
+
 void start_game() {
+    Clock time;
+    Time elapsed;
+    time.restart();
+
+    double fps;
+
+    Font font;
+
+    // завантажуємо шрифт
+    if (!font.loadFromFile("../data/fonts/basic_font.ttf"))
+    {
+        cout << "Failed to load font!" << endl;
+    }
+
+    Text FPS;
+    FPS.setFont(font);
+    FPS.setCharacterSize(20);
+    FPS.setFillColor(Color(255,155,0));
+    FPS.setPosition(Vector2f(520,0));
 
     VertexArray plates(Quads, 1024);
 
@@ -178,12 +214,12 @@ void start_game() {
     settings.antialiasingLevel = 8;
 
     // Створюємо вікно
-    RenderWindow window(VideoMode(842, 512), "RayCastingGameEngine", Style::Default, settings);
+    RenderWindow window(VideoMode(512+800, 512), "RayCastingGameEngine", Style::Default, settings);
     window.setFramerateLimit(60);
 
     // Головний цикл програми
-    while (window.isOpen())
-    {
+    while (window.isOpen()){
+     
         // Обробка подій
         Event event;
         while (window.pollEvent(event))
@@ -208,14 +244,24 @@ void start_game() {
 
         init_rays(rays, player);
 
+
+        elapsed = time.getElapsedTime();
+        fps = 1000.0 / (elapsed.asMilliseconds());
+        FPS.setString("fps: " + to_string(int(fps)));
+        time.restart();
+
+        player.cast_rays(level, window); 
+
+        draw_image(player.rays_lenth, projection);
+
         // Оновлюємо зображення
         window.clear();
-        window.draw(projection);
         window.draw(plates);
         window.draw(player_body);
         window.draw(rays);
-        player.cast_rays(level, window); 
         window.draw(pl_dir);
+        window.draw(projection);
+        window.draw(FPS);
         window.display();
     }
 }
@@ -238,6 +284,8 @@ int** load_map_plan()
 
     getline(file, n_str, '\n');
     level_size = stoi(n_str);
+    getline(file, n_str, '\n');
+
 
     level = new int* [level_size];
 
@@ -293,9 +341,9 @@ void init_rays(VertexArray & rays, Player & pl) {
     for (int i = 0; i < WIN_WIDTH*2; i+=2)
     {
         rays[i].position = pl.cords;
-        rays[i].color = Color(255,(1/WIN_WIDTH)*255,255);
+        rays[i].color = Color(255,0,255);
         rays[i + 1].position = pl.end_cords[i / 2];
-        rays[i + 1].color = Color(255,255,255);
+        rays[i + 1].color = Color(255, 0,255);
     }
 }
 
@@ -329,4 +377,3 @@ void print_vector(T* vct, int n)
     }
     cout << endl;
 }
-
