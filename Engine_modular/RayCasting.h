@@ -22,4 +22,3 @@ private:
 	float normalizeAngle(float);
 	float distBtwnPoints(float, float, float, float);
 };
-
