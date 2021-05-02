@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "RayCasting.h"
+#include "Render.h"
 
 using namespace std;
 
@@ -11,8 +12,8 @@ void print_matrix(T** arr, int n); // Функція для налагоджен
 
 int main()
 {
-    Map map(MINIMAP_SIZE, "../data/levels/level.csv");
-    Player player(0, 0);
+    Map map(MINIMAP_SIZE, PATH_LEVEL);
+    Player player(100, 100);
     RayCasting rc;
 
     ContextSettings settings;
@@ -21,6 +22,9 @@ int main()
     // Створюємо вікно
     RenderWindow window(VideoMode(WIN_WIDTH, WIN_HEIGHT), "RayCastingGameEngine", Style::Default, settings);
     window.setFramerateLimit(60);
+
+    RenderImage r(PATH_WALL_TEXTURE);
+    r.init();
 
     print_matrix(map.levelPlan, map.levelSize);
 

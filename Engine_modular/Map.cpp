@@ -112,6 +112,46 @@ Map::Map(int nParam, const string path)
     minimapBackground.setFillColor(Color(150, 150, 150));
     minimapBackground.setPosition(Vector2f(0, 0));
     minimapBackground.setSize(Vector2f(minimapSize, minimapSize));
+
+
+    /////////////////////////////////////////////////
+    //// ТИМЧАСОВИЙ КОД!!!!!!!!!
+    /////////////////////////////////////////////////
+
+    //ifstream file1("../data/textures/photo.bmp", ios::binary | ios::in);
+    //char buff[3]; // Буфер кольорів
+    //int start = 0x36; // Зміщення 
+
+    //int clr[3]; // кольори: b g r
+    //int temp;
+
+    //file1.seekg(start);
+
+    //for (int i = 0; i < 64 * 64; i++)
+    //{
+    //    file1.read(&buff[0], 3);
+    //    clr[0] = 0;
+    //    clr[1] = 0;
+    //    clr[2] = 0;
+
+    //    for (int j = 0; j < 3; j++)
+    //    {
+    //        temp = 0;
+    //        for (int k = 7; k > -1; k--)
+    //        {
+    //            if (buff[j] & (1 << k))
+    //            {
+    //                temp += (1 << k);
+    //            }
+    //        }
+    //        clr[j] = temp;
+    //    }
+
+    //    walls[(i * 4) ].color = Color(clr[2], clr[1], clr[0]);
+    //    walls[(i * 4 + 1)].color = Color(clr[2], clr[1], clr[0]);
+    //    walls[(i * 4 + 2) ].color = Color(clr[2], clr[1], clr[0]);
+    //    walls[(i * 4 + 3) ].color = Color(clr[2], clr[1],clr[0]);
+    //}
 }
 
 Map::~Map()
@@ -178,4 +218,5 @@ void Map::updateMinimap(Player player, float** raysEndCords)
 
     playerMarker.setPosition(Vector2f(xRayStart, yRayStart));
 
+   
 }

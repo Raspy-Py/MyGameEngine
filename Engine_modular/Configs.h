@@ -1,11 +1,21 @@
 #pragma once
 #include <string>
 
+using namespace std;
+
+////////////////////////////////////////////////
+// Місцезнаходження ресурсів гри              //
+////////////////////////////////////////////////
+const string PATH_LEVEL = "../data/levels/level.csv";
+const string PATH_WALL_TEXTURE = "../data/textures/stone.bmp";
+
 ////////////////////////////////////////////////
 // Параметри вікна                            //
 ////////////////////////////////////////////////
 const int WIN_WIDTH = 1600;
 const int WIN_HEIGHT = 900;
+const int WIN_HALF_HEIGHT = WIN_HALF_HEIGHT / 2;
+const int WIN_HALF_WIDTH = WIN_WIDTH / 2;
 const int MINIMAP_SIZE = 160;
 
 ////////////////////////////////////////////////
@@ -31,3 +41,8 @@ const double ANGLE_360 = PI * 2;
 const float FOV = 60.0 * PI / 180;              // Кут огляду
 const float WTP = (WIN_WIDTH / 2) / tan(FOV/2); // Відстань від гравця до площини проектування зображення
 const float ABR = FOV / WIN_WIDTH;              // Кут між сусідніми променями
+
+////////////////////////////////////////////////
+// Параметри текстур                          //
+////////////////////////////////////////////////
+const int TEXTURE_RES = 64;                     // Роздільна здатність текстур

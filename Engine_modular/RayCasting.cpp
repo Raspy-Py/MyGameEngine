@@ -155,15 +155,15 @@ void RayCasting::castRays(Player& player, Map& map)
 		if (hLen < vLen) {
 			raysEndCords[rNumber][0] = xh;
 			raysEndCords[rNumber][1] = yh;
-			raysLength[rNumber] = hLen;
-			raysPositionsOnWalls[rNumber] = (int)xh % quadSize;
+			raysLength[rNumber] = hLen * cos(player.direction - ra);
+			raysPositionsOnWalls[rNumber] = (int)xh % TEXTURE_RES;
 		}
 		else
 		{
 			raysEndCords[rNumber][0] = xv;
 			raysEndCords[rNumber][1] = yv;
-			raysLength[rNumber] = vLen;
-			raysPositionsOnWalls[rNumber] = (int)yv % quadSize;
+			raysLength[rNumber] = vLen * cos(player.direction - ra);
+			raysPositionsOnWalls[rNumber] = (int)yv % TEXTURE_RES;
 		}
 	}
 }
