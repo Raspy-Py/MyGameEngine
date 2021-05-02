@@ -7,14 +7,15 @@ using namespace std;
 // Місцезнаходження ресурсів гри              //
 ////////////////////////////////////////////////
 const string PATH_LEVEL = "../data/levels/level.csv";
-const string PATH_WALL_TEXTURE = "../data/textures/stone.bmp";
+const string PATH_WALL_TEXTURE = "../data/textures/coral.bmp";
 
 ////////////////////////////////////////////////
 // Параметри вікна                            //
 ////////////////////////////////////////////////
-const int WIN_WIDTH = 1600;
-const int WIN_HEIGHT = 900;
-const int WIN_HALF_HEIGHT = WIN_HALF_HEIGHT / 2;
+const float AR = 9.0 / 16;
+const int WIN_WIDTH = 800;
+const int WIN_HEIGHT = WIN_WIDTH * AR;
+const int WIN_HALF_HEIGHT = WIN_HEIGHT / 2;
 const int WIN_HALF_WIDTH = WIN_WIDTH / 2;
 const int MINIMAP_SIZE = 160;
 
@@ -23,7 +24,7 @@ const int MINIMAP_SIZE = 160;
 ////////////////////////////////////////////////
 const int PLAYER_DEFAULT_HEALTH = 100;
 const int PLAYER_DEFAULT_SPEED = 3; 
-const float PLAYER_DEFAULT_ROTATION_SPEED = 0.1;
+const float PLAYER_DEFAULT_ROTATION_SPEED = 0.06;
 
 ////////////////////////////////////////////////
 // Математичні константи                      //
@@ -45,4 +46,5 @@ const float ABR = FOV / WIN_WIDTH;              // Кут між сусідніми променями
 ////////////////////////////////////////////////
 // Параметри текстур                          //
 ////////////////////////////////////////////////
-const int TEXTURE_RES = 64;                     // Роздільна здатність текстур
+const int TEXTURE_RES = 32;                     // Роздільна здатність текстур
+const float WALL_HEIGHT = 64;

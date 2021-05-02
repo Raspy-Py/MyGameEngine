@@ -15,6 +15,7 @@ int main()
     Map map(MINIMAP_SIZE, PATH_LEVEL);
     Player player(100, 100);
     RayCasting rc;
+    RenderImage render(PATH_WALL_TEXTURE);
 
     ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -23,8 +24,6 @@ int main()
     RenderWindow window(VideoMode(WIN_WIDTH, WIN_HEIGHT), "RayCastingGameEngine", Style::Default, settings);
     window.setFramerateLimit(60);
 
-    RenderImage r(PATH_WALL_TEXTURE);
-    r.init();
 
     print_matrix(map.levelPlan, map.levelSize);
 
@@ -41,8 +40,11 @@ int main()
         player.listenKeyboard();
         rc.castRays(player, map);
         map.updateMinimap(player, rc.raysEndCords);
+        render.updateImage(rc);
+
 
         window.clear();
+        render.draw(window);
         map.draw(window);
         window.display();
     }

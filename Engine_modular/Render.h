@@ -3,8 +3,8 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#include "RGBMap.h"
 #include "Configs.h"
+#include "RayCasting.h"
 
 using namespace sf;
 using namespace std;
@@ -16,9 +16,13 @@ public:
 	~RenderImage();
 
 	void init();
+	void updateImage(RayCasting &);
+	void draw(RenderWindow&);
 
 private:
 	VertexArray image;
+	VertexArray floor;
+	VertexArray ceiling;
 	vector<Color> textureColorMap;
 	Color** textureCols;
 	unsigned hexToDec(char);

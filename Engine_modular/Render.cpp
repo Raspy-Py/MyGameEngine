@@ -2,8 +2,30 @@
 
 RenderImage::RenderImage(string pathToWallTexture)
 {
-	image.setPrimitiveType(Quads);
-	image.resize(4096);
+	image.setPrimitiveType(Lines);
+	image.resize(WIN_WIDTH * TEXTURE_RES * 2);
+
+	floor.setPrimitiveType(Quads);
+	floor.resize(4);
+	floor[0].color = Color(11, 42, 42);
+	floor[1].color = Color(11, 42, 42);
+	floor[2].color = Color(92, 138, 138);
+	floor[3].color = Color(92, 138, 138);
+	floor[0].position = Vector2f(0        , WIN_HALF_HEIGHT);
+	floor[1].position = Vector2f(WIN_WIDTH, WIN_HALF_HEIGHT);
+	floor[2].position = Vector2f(WIN_WIDTH, WIN_HEIGHT     );
+	floor[3].position = Vector2f(0        , WIN_HEIGHT     );
+
+	ceiling.setPrimitiveType(Quads);
+	ceiling.resize(4);
+	ceiling[0].color = Color(0, 191, 255);
+	ceiling[1].color = Color(0, 191, 255);
+	ceiling[2].color = Color(0, 53, 104);
+	ceiling[3].color = Color(0, 53, 104);
+	ceiling[0].position = Vector2f(0        , 0              );
+	ceiling[1].position = Vector2f(WIN_WIDTH, 0              );
+	ceiling[2].position = Vector2f(WIN_WIDTH, WIN_HALF_HEIGHT);
+	ceiling[3].position = Vector2f(0        , WIN_HALF_HEIGHT);
 
 	////////////////////////////////////////////////
 	// 	Завантажуємо текстури                     //
@@ -59,6 +81,44 @@ RenderImage::~RenderImage()
 void RenderImage::init()
 {
 	
+}
+
+void RenderImage::updateImage(RayCasting & rc)
+{
+	int textureCol; 
+	int lineIndex;
+	float wallColTop;
+	float wallColSize;
+	float pixelSize;
+
+	for (int col = 0; col < WIN_WIDTH; col++)
+	{
+		textureCol = rc.raysPositionsOnWalls[col];
+
+		wallColSize = (WALL_HEIGHT * WTP / 2) / rc.raysLength[col];
+		pixelSize = wallColSize / TEXTURE_RES  * 2;
+		wallColTop = WIN_HALF_HEIGHT - wallColSize;
+
+		for (int pixel = 0; pixel < TEXTURE_RES; pixel++, wallColTop+=pixelSize)
+		{
+			//---Зафарбовуємо стовпець стіни---//
+			lineIndex = (col * TEXTURE_RES + pixel) << 1;
+			
+			image[lineIndex    ].color = textureCols[textureCol][pixel];
+			image[lineIndex + 1].color = textureCols[textureCol][pixel];
+
+			//---Задаємо кординати---//
+			image[lineIndex    ].position = Vector2f(col, wallColTop);
+			image[lineIndex + 1].position = Vector2f(col, wallColTop+ pixelSize);
+		}
+	}
+}
+
+void RenderImage::draw(RenderWindow& window)
+{
+	window.draw(floor);
+	window.draw(ceiling);
+	window.draw(image);
 }
 
 unsigned RenderImage::hexToDec(char hex)
