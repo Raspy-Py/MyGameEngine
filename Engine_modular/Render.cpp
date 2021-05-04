@@ -7,10 +7,10 @@ RenderImage::RenderImage(string pathToWallTexture)
 
 	floor.setPrimitiveType(Quads);
 	floor.resize(4);
-	floor[0].color = Color(11, 42, 42);
-	floor[1].color = Color(11, 42, 42);
-	floor[2].color = Color(92, 138, 138);
-	floor[3].color = Color(92, 138, 138);
+	floor[0].color = Color(169, 169, 169);
+	floor[1].color = Color(169, 169, 169);
+	floor[2].color = Color(169, 169, 169);
+	floor[3].color = Color(169, 169, 169);
 	floor[0].position = Vector2f(0        , WIN_HALF_HEIGHT);
 	floor[1].position = Vector2f(WIN_WIDTH, WIN_HALF_HEIGHT);
 	floor[2].position = Vector2f(WIN_WIDTH, WIN_HEIGHT     );
@@ -18,10 +18,10 @@ RenderImage::RenderImage(string pathToWallTexture)
 
 	ceiling.setPrimitiveType(Quads);
 	ceiling.resize(4);
-	ceiling[0].color = Color(0, 191, 255);
-	ceiling[1].color = Color(0, 191, 255);
-	ceiling[2].color = Color(0, 53, 104);
-	ceiling[3].color = Color(0, 53, 104);
+	ceiling[0].color = Color(112, 112, 112);
+	ceiling[1].color = Color(112, 112, 112);
+	ceiling[2].color = Color(112, 112, 112);
+	ceiling[3].color = Color(112, 112, 112);
 	ceiling[0].position = Vector2f(0        , 0              );
 	ceiling[1].position = Vector2f(WIN_WIDTH, 0              );
 	ceiling[2].position = Vector2f(WIN_WIDTH, WIN_HALF_HEIGHT);

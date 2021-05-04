@@ -1,23 +1,23 @@
 #pragma once
 #include <string>
 
-using namespace std;
-
 ////////////////////////////////////////////////
 // Місцезнаходження ресурсів гри              //
 ////////////////////////////////////////////////
-const string PATH_LEVEL = "../data/levels/level.csv";
-const string PATH_WALL_TEXTURE = "../data/textures/coral.bmp";
+const std::string PATH_LEVEL = "../data/levels/level.csv";
+const std::string PATH_WALL_TEXTURE = "../data/textures/stone.bmp";
+const std::string PATH_DEFAULT_FONT = "../data/fonts/basic_font.ttf";
 
 ////////////////////////////////////////////////
 // Параметри вікна                            //
 ////////////////////////////////////////////////
 const float AR = 9.0 / 16;
+const float WISHED_FPS = 60;
 const int WIN_WIDTH = 800;
 const int WIN_HEIGHT = WIN_WIDTH * AR;
 const int WIN_HALF_HEIGHT = WIN_HEIGHT / 2;
 const int WIN_HALF_WIDTH = WIN_WIDTH / 2;
-const int MINIMAP_SIZE = 160;
+const int MINIMAP_SIZE = WIN_HALF_HEIGHT / 2;
 
 ////////////////////////////////////////////////
 // Параметри ініціалізація гравця             //
@@ -39,12 +39,12 @@ const double ANGLE_360 = PI * 2;
 ////////////////////////////////////////////////
 // Параметри лиття променів                   //
 ////////////////////////////////////////////////
-const float FOV = 60.0 * PI / 180;              // Кут огляду
+const float FOV = 75.0 * PI / 180;              // Кут огляду
 const float WTP = (WIN_WIDTH / 2) / tan(FOV/2); // Відстань від гравця до площини проектування зображення
 const float ABR = FOV / WIN_WIDTH;              // Кут між сусідніми променями
 
 ////////////////////////////////////////////////
 // Параметри текстур                          //
 ////////////////////////////////////////////////
-const int TEXTURE_RES = 32;                     // Роздільна здатність текстур
+const int TEXTURE_RES = 64;                     // Роздільна здатність текстур
 const float WALL_HEIGHT = 64;

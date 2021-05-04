@@ -1,8 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Configs.h"
 #include <Windows.h>
+#include "Configs.h"
+#include "FPSHandler.h"
 
 using namespace sf;
 using namespace std;
@@ -20,13 +21,13 @@ public:
 	float rotationSpeed;
 	Vector2f position;
 
-	void listenKeyboard();
+	void listenKeyboard(FPS &);
 	void takeDamage(int);
 
 private:
-	void moveForward();
-	void moveBackward();
-	void turnLeft();
-	void turnRight();
+	void moveForward(FPS&);
+	void moveBackward(FPS&);
+	void turnLeft(FPS&);
+	void turnRight(FPS&);
 	void getInfo();
 };

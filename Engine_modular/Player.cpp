@@ -2,25 +2,27 @@
 
 Player::Player(float x, float y)
 {
+
     speed = PLAYER_DEFAULT_SPEED;
     rotationSpeed = PLAYER_DEFAULT_ROTATION_SPEED;
     health = PLAYER_DEFAULT_HEALTH;
     direction = PI;
     position.x = x;
     position.y = y;
+
 }
 
 Player::~Player()
 {
 }
 
-void Player::listenKeyboard()
+void Player::listenKeyboard(FPS& fps)
 {
-    if      (Keyboard::isKeyPressed(Keyboard::W)) { moveForward(); } // рухатись вперед
-    else if (Keyboard::isKeyPressed(Keyboard::S)) { moveBackward(); } // рухатись назад
+    if      (Keyboard::isKeyPressed(Keyboard::W)) { moveForward(fps); } // рухатись вперед
+    else if (Keyboard::isKeyPressed(Keyboard::S)) { moveBackward(fps); } // рухатись назад
 
-    if      (Keyboard::isKeyPressed(Keyboard::A)) { turnLeft(); } // повернути наліво
-    else if (Keyboard::isKeyPressed(Keyboard::D)) { turnRight(); } // повернути направо
+    if      (Keyboard::isKeyPressed(Keyboard::A)) { turnLeft(fps); } // повернути наліво
+    else if (Keyboard::isKeyPressed(Keyboard::D)) { turnRight(fps); } // повернути направо
 
     if      (Keyboard::isKeyPressed(Keyboard::P)) { getInfo(); } // інформація для налагодження
 }
@@ -30,19 +32,20 @@ void Player::takeDamage(int damage)
     health -= damage;
 }
 
-void Player::moveForward()
+void Player::moveForward(FPS& fps)
 {
-    position.x += speed * cos(direction);
-    position.y += speed * sin(direction);
+    cout << fps.getFPS() << endl;
+    position.x += speed * cos(direction) * fps.getFPS();
+    position.y += speed * sin(direction) * fps.getFPS();
 }
 
-void Player::moveBackward()
+void Player::moveBackward(FPS& fps)
 {
-    position.x -= speed * cos(direction);
-    position.y -= speed * sin(direction);
+    position.x -= speed * cos(direction) * fps.getFPS();
+    position.y -= speed * sin(direction) * fps.getFPS();
 }
 
-void Player::turnLeft()
+void Player::turnLeft(FPS& fps)
 {
     direction -= rotationSpeed;
     if (direction < 0)
@@ -51,7 +54,7 @@ void Player::turnLeft()
     }
 }
 
-void Player::turnRight()
+void Player::turnRight(FPS& fps)
 {
     direction += rotationSpeed;
     if (direction > PI * 2)

@@ -7,7 +7,6 @@
 #include "RayCasting.h"
 
 using namespace sf;
-using namespace std;
 
 class RenderImage
 {
@@ -25,6 +24,7 @@ private:
 	VertexArray ceiling;
 	vector<Color> textureColorMap;
 	Color** textureCols;
+
 	unsigned hexToDec(char);
 };
 
