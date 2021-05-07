@@ -1,6 +1,6 @@
 #include "Render.h"
 
-RenderImage::RenderImage(string pathToWallTexture)
+RenderImage::RenderImage(std::string pathToWallTexture)
 {
 	image.setPrimitiveType(Lines);
 	image.resize(WIN_WIDTH * TEXTURE_RES * 2);
@@ -35,7 +35,7 @@ RenderImage::RenderImage(string pathToWallTexture)
 	int bias;        // Зміщення таблиці кольорів відносно початку файлу
 	char buff[n];    // Буфер
 
-	ifstream file(pathToWallTexture, ios::binary | ios::in);
+	std::ifstream file(pathToWallTexture, std::ios::binary | std::ios::in);
 
 	file.seekg(0x0A);
 	file.read(&buff[0], 3);

@@ -1,21 +1,21 @@
 #include "Map.h"
 
-Map::Map(int nParam, const string path)
+Map::Map(int nParam, const std::string path)
 {
     ////////////////////////////////////////////////
     //  Завантажуємо схему рівня                  //
     ////////////////////////////////////////////////
 
-    ifstream file;
-    string nStr; // Розмір рівня рядком
-    string cellStr;
+    std::ifstream file;
+    std::string nStr; // Розмір рівня рядком
+    std::string cellStr;
     int cell;
  
 
     file.open(path);
 
     if (!file.is_open()) {
-        cout << "Failed to load game map! File opening error.\n";
+        std::cout << "Failed to load game map! File opening error.\n";
     }
 
     getline(file, nStr, '\n');
