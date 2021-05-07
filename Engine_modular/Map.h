@@ -5,7 +5,7 @@
 #include "Configs.h"
 #include "Player.h"
 
-//using namespace std;
+using namespace std;
 using namespace sf;
 
 class Player;
@@ -13,7 +13,7 @@ class Player;
 class Map
 {
 public:
-	Map(int, std::string);
+	Map(int, string);
 	~Map();
 
 	int **levelPlan;
@@ -30,7 +30,7 @@ private:
 	VertexArray walls;
 	VertexArray rays;
 	VertexArray playerDirPointer;
-	std::vector<CircleShape> enemyMarkers;
+	vector<CircleShape> enemyMarkers;
 	CircleShape playerMarker;
 	RectangleShape minimapBackground;
 };

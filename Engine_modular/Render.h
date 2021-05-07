@@ -1,16 +1,17 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 #include <fstream>
+#include <vector>
+#include <iostream>
 #include "Configs.h"
-
+#include "RayCasting.h"
 
 using namespace sf;
-
-class RayCasting;
 
 class RenderImage
 {
 public:
-	RenderImage(std::string);
+	RenderImage(string);
 	~RenderImage();
 
 	void init();
@@ -21,7 +22,7 @@ private:
 	VertexArray image;
 	VertexArray floor;
 	VertexArray ceiling;
-	std::vector<Color> textureColorMap;
+	vector<Color> textureColorMap;
 	Color** textureCols;
 
 	unsigned hexToDec(char);

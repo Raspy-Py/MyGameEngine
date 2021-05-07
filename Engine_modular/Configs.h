@@ -1,15 +1,5 @@
 #pragma once
 #include <string>
-#include <vector>
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include "Game.h"
-#include "Map.h"
-#include "Player.h"
-#include "RayCasting.h"
-#include "Render.h"
-#include "FPSHandler.h"
-
 
 ////////////////////////////////////////////////
 // Місцезнаходження ресурсів гри              //

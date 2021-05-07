@@ -105,13 +105,13 @@ void Player::turnRight(FPS& fps)
 void Player::getInfo()
 {
     system("cls");
-    std::cout << "<----Information about player---->" << std::endl;
+    cout << "<----Information about player---->" << endl;
 
-    std::cout << "Position: (" <<position.x << ", "<< position.y << ")" << std::endl;
-    std::cout << "Direction: " << direction/ PI * 180  << std::endl;
-    std::cout << "Health: " << health << std::endl;
-    std::cout << "Speed: " << speed << " units/tick" << std::endl;
-    std::cout << "Ratation speed: " << rotationSpeed / PI * 180 <<" grad/tick" << std::endl;
+    cout << "Position: (" <<position.x << ", "<< position.y << ")" << endl;
+    cout << "Direction: " << direction/ PI * 180  << endl;
+    cout << "Health: " << health << endl;
+    cout << "Speed: " << speed << " units/tick" << endl;
+    cout << "Ratation speed: " << rotationSpeed / PI * 180 <<" grad/tick" <<  endl;
 
-    std::cout << "<-------------------------------->" << std::endl;
+    cout << "<-------------------------------->" << endl;
 }

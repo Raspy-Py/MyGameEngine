@@ -1,13 +1,15 @@
 #pragma once
+#include <SFML/Graphics.hpp>
+#include <iostream>
 #include <Windows.h>
 #include "Configs.h"
-
+#include "FPSHandler.h"
+#include "Map.h"
 
 using namespace sf;
-//using namespace std;
+using namespace std;
 
 class Map;
-class FPS;
 
 class Player
 {
