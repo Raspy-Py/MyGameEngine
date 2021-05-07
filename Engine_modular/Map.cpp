@@ -67,7 +67,7 @@ Map::Map(int nParam, const string path)
     playerDirPointer.setPrimitiveType(Lines);
 
     playerMarker.setRadius(minimapCellSize / 2);
-    playerMarker.setFillColor(Color(0, 230, 0));
+    playerMarker.setFillColor(Color(0, 255, 255));
 
     for (int i = 0; i < levelSize; i++)
     {
@@ -82,9 +82,9 @@ Map::Map(int nParam, const string path)
             y11 = y10 = (i * cellSize + cellSize) * minimapToMapRelation;
 
             walls[quadIndex    ].position = Vector2f(x00, y00);
-            walls[quadIndex + 1].position = Vector2f(x01 - 1 , y01);
-            walls[quadIndex + 2].position = Vector2f(x11 - 1, y11 - 1);
-            walls[quadIndex + 3].position = Vector2f(x10, y10 - 1);
+            walls[quadIndex + 1].position = Vector2f(x01, y01);
+            walls[quadIndex + 2].position = Vector2f(x11, y11);
+            walls[quadIndex + 3].position = Vector2f(x10, y10);
 
             if (levelPlan[i][j]) quadColor = Color(255, 255, 255);                
             else quadColor = Color(0, 0, 0);
@@ -112,46 +112,6 @@ Map::Map(int nParam, const string path)
     minimapBackground.setFillColor(Color(150, 150, 150));
     minimapBackground.setPosition(Vector2f(0, 0));
     minimapBackground.setSize(Vector2f(minimapSize, minimapSize));
-
-
-    /////////////////////////////////////////////////
-    //// ÒÈÌ×ÀÑÎÂÈÉ ÊÎÄ!!!!!!!!!
-    /////////////////////////////////////////////////
-
-    //ifstream file1("../data/textures/photo.bmp", ios::binary | ios::in);
-    //char buff[3]; // Áóôåð êîëüîð³â
-    //int start = 0x36; // Çì³ùåííÿ 
-
-    //int clr[3]; // êîëüîðè: b g r
-    //int temp;
-
-    //file1.seekg(start);
-
-    //for (int i = 0; i < 64 * 64; i++)
-    //{
-    //    file1.read(&buff[0], 3);
-    //    clr[0] = 0;
-    //    clr[1] = 0;
-    //    clr[2] = 0;
-
-    //    for (int j = 0; j < 3; j++)
-    //    {
-    //        temp = 0;
-    //        for (int k = 7; k > -1; k--)
-    //        {
-    //            if (buff[j] & (1 << k))
-    //            {
-    //                temp += (1 << k);
-    //            }
-    //        }
-    //        clr[j] = temp;
-    //    }
-
-    //    walls[(i * 4) ].color = Color(clr[2], clr[1], clr[0]);
-    //    walls[(i * 4 + 1)].color = Color(clr[2], clr[1], clr[0]);
-    //    walls[(i * 4 + 2) ].color = Color(clr[2], clr[1], clr[0]);
-    //    walls[(i * 4 + 3) ].color = Color(clr[2], clr[1],clr[0]);
-    //}
 }
 
 Map::~Map()
@@ -176,7 +136,7 @@ void Map::draw(RenderWindow& window)
     window.draw(playerDirPointer);
 }
 
-void Map::updateMinimap(Player player, float** raysEndCords)
+void Map::updateMinimap(Player& player, float** raysEndCords)
 {
     ////////////////////////////////////////////////
     // Îíîâëþºìî êîîðäèíàòè ïðîìåí³â íà ì³í³êàðò³ //

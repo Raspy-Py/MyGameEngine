@@ -4,10 +4,12 @@
 #include <Windows.h>
 #include "Configs.h"
 #include "FPSHandler.h"
+#include "Map.h"
 
 using namespace sf;
 using namespace std;
 
+class Map;
 
 class Player
 {
@@ -21,12 +23,12 @@ public:
 	float rotationSpeed;
 	Vector2f position;
 
-	void listenKeyboard(FPS &);
+	virtual void listenKeyboard(FPS&, Map&);
 	void takeDamage(int);
 
 private:
-	void moveForward(FPS&);
-	void moveBackward(FPS&);
+	void moveForward(FPS&, Map&);
+	void moveBackward(FPS&, Map&);
 	void turnLeft(FPS&);
 	void turnRight(FPS&);
 	void getInfo();

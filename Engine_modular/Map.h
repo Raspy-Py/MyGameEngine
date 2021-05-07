@@ -8,6 +8,8 @@
 using namespace std;
 using namespace sf;
 
+class Player;
+
 class Map
 {
 public:
@@ -22,7 +24,7 @@ public:
 	float minimapToMapRelation;
 
 	void draw(RenderWindow&);
-	void updateMinimap(Player, float**);
+	virtual void updateMinimap(Player &, float**);
 
 private:
 	VertexArray walls;

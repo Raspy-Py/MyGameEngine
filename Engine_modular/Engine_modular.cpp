@@ -20,14 +20,11 @@ int main()
     Player player(100, 100);
 
     ContextSettings settings;
-    //settings.antialiasingLevel = 8;
+    settings.antialiasingLevel = 8;
 
     // Створюємо вікно
-    RenderWindow window(VideoMode(WIN_WIDTH, WIN_HEIGHT), "RayCastingGameEngine", Style::Default/*, settings*/);
-    //window.setFramerateLimit(60);
-
-
-
+    RenderWindow window(VideoMode(WIN_WIDTH, WIN_HEIGHT), "RayCastingGameEngine", Style::Default, settings);
+   
     while (window.isOpen()) {
 
         // Обробка подій
@@ -36,7 +33,7 @@ int main()
             if (event.type == Event::Closed)
                 window.close();
         
-        player.listenKeyboard(fps);
+        player.listenKeyboard(fps, map);
         rc.castRays(player, map);
         map.updateMinimap(player, rc.raysEndCords);
         render.updateImage(rc);
