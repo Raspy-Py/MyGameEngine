@@ -65,9 +65,11 @@ Map::Map(int nParam, const string path)
 
     playerDirPointer.resize(2);
     playerDirPointer.setPrimitiveType(Lines);
+    playerDirPointer[0].color = Color(255, 0, 0);
+    playerDirPointer[1].color = Color(255,0,0);
 
     playerMarker.setRadius(minimapCellSize / 2);
-    playerMarker.setFillColor(Color(0, 255, 255));
+    playerMarker.setFillColor(Color(255, 204, 0));
 
     for (int i = 0; i < levelSize; i++)
     {
@@ -131,7 +133,7 @@ void Map::draw(RenderWindow& window)
 {
     window.draw(minimapBackground);
     window.draw(walls);
-    window.draw(rays);
+    //window.draw(rays);
     window.draw(playerMarker);
     window.draw(playerDirPointer);
 }
@@ -146,25 +148,25 @@ void Map::updateMinimap(Player& player, float** raysEndCords)
     float xRayEnd, yRayEnd;
     float xPointerEnd, yPointerEnd;
     
+    xRayStart = player.position.x * minimapToMapRelation;
+    yRayStart = player.position.y * minimapToMapRelation;
 
-    for (int i = 0; i < WIN_WIDTH * 2; i+=2)
+   /* for (int i = 0; i < WIN_WIDTH * 2; i+=2)
     {
-        xRayStart = player.position.x * minimapToMapRelation;
-        yRayStart = player.position.y * minimapToMapRelation;
 
         xRayEnd = raysEndCords[i / 2][0] * minimapToMapRelation;
         yRayEnd = raysEndCords[i / 2][1] * minimapToMapRelation;
 
         rays[i].position = Vector2f(xRayStart, yRayStart);
         rays[i + 1].position = Vector2f(xRayEnd, yRayEnd);
-    }
+    }*/
 
     ////////////////////////////////////////////////
     // Оновлюємо вказівник напрямку руху гравця   //
     ////////////////////////////////////////////////
 
-    xPointerEnd = (xRayStart + 64 * cos(player.direction) * minimapToMapRelation);
-    yPointerEnd = (yRayStart + 64 * sin(player.direction) * minimapToMapRelation);
+    xPointerEnd = (xRayStart + cellSize * cos(player.direction) * minimapToMapRelation);
+    yPointerEnd = (yRayStart + cellSize * sin(player.direction) * minimapToMapRelation);
 
     playerDirPointer[0].position = Vector2f(xRayStart, yRayStart);
     playerDirPointer[1].position = Vector2f(xPointerEnd, yPointerEnd);
@@ -176,7 +178,5 @@ void Map::updateMinimap(Player& player, float** raysEndCords)
     xRayStart -= playerMarker.getRadius();
     yRayStart -= playerMarker.getRadius();
 
-    playerMarker.setPosition(Vector2f(xRayStart, yRayStart));
-
-   
+    playerMarker.setPosition(Vector2f(xRayStart, yRayStart));  
 }

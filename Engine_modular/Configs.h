@@ -4,7 +4,8 @@
 ////////////////////////////////////////////////
 // Місцезнаходження ресурсів гри              //
 ////////////////////////////////////////////////
-const std::string PATH_LEVEL = "../data/levels/level.csv";
+const std::string PATH_MM_BACKGROUND = "../data/pictures/main_menu_background.jpeg";
+const std::string PATH_LEVEL = "../data/levels/level1.csv";
 const std::string PATH_WALL_TEXTURE = "../data/textures/beacon.bmp";
 const std::string PATH_DEFAULT_FONT = "../data/fonts/basic_font.ttf";
 

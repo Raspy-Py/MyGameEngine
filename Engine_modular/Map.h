@@ -24,7 +24,7 @@ public:
 	float minimapToMapRelation;
 
 	void draw(RenderWindow&);
-	virtual void updateMinimap(Player &, float**);
+	void updateMinimap(Player &, float**);
 
 private:
 	VertexArray walls;

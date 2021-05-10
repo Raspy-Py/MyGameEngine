@@ -96,10 +96,10 @@ void genMaze(int** maze, int mazeSize)
 
     while (cellsLeft)
     {
-       /* system("cls");
+        system("cls");
         cout << "Cells left " << cellsLeft << endl;
         printMatrix(maze, mazeSize, curCell);
-        this_thread::sleep_for(chrono::milliseconds(mazeSize * 10));*/
+        this_thread::sleep_for(chrono::milliseconds(mazeSize * 10));
 
         if (unvisitedNeighbors(visitedCells, mazeSize, curCell))
         {
