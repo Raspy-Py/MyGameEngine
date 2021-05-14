@@ -11,17 +11,17 @@ using namespace sf;
 class RenderImage
 {
 public:
-	RenderImage(string);
+	RenderImage();
 	~RenderImage();
 
-	void init();
+	void init(std::string, Color&, Color&);
 	void updateImage(RayCasting &);
 	void draw(RenderWindow&);
-
+	void deleteTexture();
 private:
 	VertexArray image;
-	VertexArray floor;
-	VertexArray ceiling;
+	RectangleShape floor;
+	RectangleShape ceiling;
 	vector<Color> textureColorMap;
 	Color** textureCols;
 

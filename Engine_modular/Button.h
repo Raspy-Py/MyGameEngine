@@ -27,6 +27,7 @@ public:
 	void setTextString(std::string);
 	void setTextPosition(Vector2f);
 	void draw(RenderWindow&);
+	void alignTextCentre(float);
 
 private:
 	unsigned int norm(int);

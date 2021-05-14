@@ -19,12 +19,17 @@ public:
 
 private:
 	Clock time;
+	Clock timeFromUpdate;
 	Time elapsed;
+	Time update;
+
 	Text stringFPS;
 	Font stringFPSFont;
+	float stringFPSSize;
 	std::string stringFPSPrefix;
 
 	float actualFPS;
 	float wishedFPS;
+
 	void initStringFPS();
 };

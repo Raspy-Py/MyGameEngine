@@ -14,15 +14,15 @@ Button::Button(Vector2f position, Vector2f size, Color color)
 	////////////////////////////////////////////////
 	// 	   ²í³ö³àë³çóºìî â³äò³íêè
 	////////////////////////////////////////////////
-	hoverColor.r = (color.r + 20) % 256;
-	hoverColor.g = (color.g + 20) % 256;
-	hoverColor.b = (color.b + 20) % 256;
-	hoverColor.a = (color.a + 20) % 256;
+	hoverColor.r = norm(color.r + 20);
+	hoverColor.g = norm(color.g + 20);
+	hoverColor.b = norm(color.b + 20);
+	hoverColor.a = norm(color.a + 20);
 
 	activeColor.r = norm(color.r - 15);
 	activeColor.g = norm(color.g - 15);
 	activeColor.b = norm(color.b - 15);
-	activeColor.a = norm(color.a - 15);
+	activeColor.a = norm(color.a + 40);
 }
 
 Button::~Button()
@@ -108,9 +108,22 @@ void Button::draw(RenderWindow& window)
 	window.draw(text);
 }
 
+void Button::alignTextCentre(float fontAR)
+{
+	float textX;
+	float textY;
+
+	textY = this->getPosition().y + (this->getSize().y - text.getCharacterSize()) / 2;
+	textX = this->getPosition().x + (this->getSize().x - text.getCharacterSize() * text.getString().getSize()*fontAR) / 2;
+
+	text.setPosition(textX, textY);
+}
+
 unsigned int Button::norm(int n)
 {
-	if (n >= 0)
+	if (n >= 0 && n <= 255)
 		return n;
+	if (n > 255)
+		return 255;
 	return 0;
 }

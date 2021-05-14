@@ -1,6 +1,24 @@
 #include "Map.h"
 
-Map::Map(int nParam, const string path)
+Map::Map()
+{
+
+}
+
+Map::~Map()
+{
+    ////////////////////////////////////////////////
+    // Видаляємо схему рівня                      //
+    ////////////////////////////////////////////////
+
+    //for (int i = 0; i < levelSize; i++)
+    //{
+    //    delete [] levelPlan[i];
+    //}
+    //delete[] levelPlan;
+}
+
+void Map::loadMap(int nParam, const string path)
 {
     ////////////////////////////////////////////////
     //  Завантажуємо схему рівня                  //
@@ -10,7 +28,7 @@ Map::Map(int nParam, const string path)
     string nStr; // Розмір рівня рядком
     string cellStr;
     int cell;
- 
+
 
     file.open(path);
 
@@ -66,7 +84,7 @@ Map::Map(int nParam, const string path)
     playerDirPointer.resize(2);
     playerDirPointer.setPrimitiveType(Lines);
     playerDirPointer[0].color = Color(255, 0, 0);
-    playerDirPointer[1].color = Color(255,0,0);
+    playerDirPointer[1].color = Color(255, 0, 0);
 
     playerMarker.setRadius(minimapCellSize / 2);
     playerMarker.setFillColor(Color(255, 204, 0));
@@ -83,15 +101,15 @@ Map::Map(int nParam, const string path)
             y01 = y00 = i * cellSize * minimapToMapRelation;
             y11 = y10 = (i * cellSize + cellSize) * minimapToMapRelation;
 
-            walls[quadIndex    ].position = Vector2f(x00, y00);
+            walls[quadIndex].position = Vector2f(x00, y00);
             walls[quadIndex + 1].position = Vector2f(x01, y01);
             walls[quadIndex + 2].position = Vector2f(x11, y11);
             walls[quadIndex + 3].position = Vector2f(x10, y10);
 
-            if (levelPlan[i][j]) quadColor = Color(255, 255, 255);                
+            if (levelPlan[i][j]) quadColor = Color(255, 255, 255);
             else quadColor = Color(0, 0, 0);
-                
-            walls[quadIndex    ].color = quadColor;
+
+            walls[quadIndex].color = quadColor;
             walls[quadIndex + 1].color = quadColor;
             walls[quadIndex + 2].color = quadColor;
             walls[quadIndex + 3].color = quadColor;
@@ -114,19 +132,6 @@ Map::Map(int nParam, const string path)
     minimapBackground.setFillColor(Color(150, 150, 150));
     minimapBackground.setPosition(Vector2f(0, 0));
     minimapBackground.setSize(Vector2f(minimapSize, minimapSize));
-}
-
-Map::~Map()
-{
-    ////////////////////////////////////////////////
-    // Видаляємо схему рівня                      //
-    ////////////////////////////////////////////////
-
-    //for (int i = 0; i < levelSize; i++)
-    //{
-    //    delete [] levelPlan[i];
-    //}
-    //delete[] levelPlan;
 }
 
 void Map::draw(RenderWindow& window)

@@ -5,27 +5,31 @@
 // Місцезнаходження ресурсів гри              //
 ////////////////////////////////////////////////
 const std::string PATH_MM_BACKGROUND = "../data/pictures/main_menu_background.jpeg";
-const std::string PATH_LEVEL = "../data/levels/level1.csv";
+const std::string PATH_LEVEL = "../data/levels/level.csv";
+const std::string PATH_LEVEL_ONE = "../data/levels/level1.csv";
 const std::string PATH_WALL_TEXTURE = "../data/textures/beacon.bmp";
 const std::string PATH_DEFAULT_FONT = "../data/fonts/basic_font.ttf";
+const std::string PATH_TEMPLATES = "../data/levels_templates.csv";
 
 ////////////////////////////////////////////////
 // Параметри вікна                            //
 ////////////////////////////////////////////////
+const float FONT_AR = 0.735;
 const float AR = 9.0 / 16;
 const float WISHED_FPS = 60;
-const int WIN_WIDTH = 1280;
-const int WIN_HEIGHT = WIN_WIDTH * AR;
+const int WIN_WIDTH = 1280 + 1;
+const int WIN_HEIGHT = (WIN_WIDTH -1 ) * AR;
 const int WIN_HALF_HEIGHT = WIN_HEIGHT / 2;
-const int WIN_HALF_WIDTH = WIN_WIDTH / 2;
+const int WIN_HALF_WIDTH = (WIN_WIDTH-1) / 2;
 const int MINIMAP_SIZE = WIN_HALF_HEIGHT / 2;
+const int MIN_ELAPSED = 200;
 
 ////////////////////////////////////////////////
 // Параметри ініціалізація гравця             //
 ////////////////////////////////////////////////
 const int PLAYER_DEFAULT_HEALTH = 100;
 const int PLAYER_DEFAULT_SPEED = 3; 
-const float PLAYER_DEFAULT_ROTATION_SPEED = 0.07;
+const float PLAYER_DEFAULT_ROTATION_SPEED = 0.05;
 
 ////////////////////////////////////////////////
 // Математичні константи                      //

@@ -6,6 +6,7 @@ FPS::FPS()
 	actualFPS = 1;
 
 	time.restart();
+	timeFromUpdate.restart();
 
 	initStringFPS();
 }
@@ -18,6 +19,7 @@ FPS::FPS(RenderWindow& window)
 	window.setFramerateLimit(wishedFPS);
 
 	time.restart();
+	timeFromUpdate.restart();
 
 	initStringFPS();
 }
@@ -38,8 +40,18 @@ float FPS::getFPS()
 void FPS::updateFPS()
 {
 	elapsed = time.getElapsedTime();
-	actualFPS = 1000.0 / (elapsed.asMilliseconds());
+	update = timeFromUpdate.getElapsedTime();
+	actualFPS = 1000000.0 / (elapsed.asMicroseconds());
+
+	if (update.asMilliseconds() > 200)
+	{
 	stringFPS.setString(stringFPSPrefix + std::to_string(int(actualFPS)));
+	stringFPSSize = (stringFPSPrefix.size() + stringFPS.getString().getSize()) * stringFPS.getCharacterSize() * 0.85 + 2;
+	stringFPS.setPosition(Vector2f(WIN_WIDTH - stringFPSSize, 0));
+
+	timeFromUpdate.restart();
+	}
+
 	time.restart();
 }
 
@@ -57,7 +69,7 @@ void FPS::initStringFPS()
 
 	stringFPSPrefix = "";
 
-	int stringFPSSize = stringFPSPrefix.size() * 16 + 48;
+	stringFPSSize = stringFPSPrefix.size() * stringFPS.getCharacterSize();
 
 	stringFPS.setFont(stringFPSFont);
 	stringFPS.setCharacterSize(20);

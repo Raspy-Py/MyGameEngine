@@ -13,7 +13,7 @@ class Player;
 class Map
 {
 public:
-	Map(int, string);
+	Map();
 	~Map();
 
 	int **levelPlan;
@@ -23,6 +23,7 @@ public:
 	float minimapCellSize;
 	float minimapToMapRelation;
 
+	void loadMap(int, string);
 	void draw(RenderWindow&);
 	void updateMinimap(Player &, float**);
 
