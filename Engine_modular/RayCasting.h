@@ -10,8 +10,9 @@ public:
 	RayCasting();
 	~RayCasting();
 
-	float* raysLength;
 	int* raysPositionsOnWalls; // для текстурування
+	bool* isWallHorizontal; // Для освітлення (горизонатальні стіни затемняємо)
+	float* raysLength;
 	float** raysEndCords;
 
 	void castRays(Player&, Map&);

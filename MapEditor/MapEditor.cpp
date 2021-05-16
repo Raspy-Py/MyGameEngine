@@ -35,7 +35,6 @@ bool onField(int, int, int);
 Cell findNewCell(int**, int, Cell&);
 
 
-
 int main() {
     Clock time;
     Time elapsed;

@@ -22,9 +22,11 @@ private:
 	VertexArray image;
 	RectangleShape floor;
 	RectangleShape ceiling;
-	vector<Color> textureColorMap;
-	Color** textureCols;
+	std::vector<Color> textureColorMap; // Послідовно випасані пікселі текстури
+	Color** textureCols; // Текстура
+	Color** textureColsShaded; // Затемнена текстура
 
+	Color fadeColor(Color&);
 	unsigned hexToDec(char);
 };
 

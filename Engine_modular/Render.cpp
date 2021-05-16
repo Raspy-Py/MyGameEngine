@@ -58,6 +58,8 @@ void RenderImage::init(std::string pathToWallTexture, Color& floorColor, Color& 
 
 	file.close();
 
+	std::reverse(textureColorMap.begin(), textureColorMap.end());
+
 	////////////////////////////////////////////////
 	// 	Розбиваємо текстуру на колонки пікселів   //
 	////////////////////////////////////////////////
@@ -70,15 +72,25 @@ void RenderImage::init(std::string pathToWallTexture, Color& floorColor, Color& 
 		textureCols[i] = new Color[TEXTURE_RES];
 	}
 
+	textureColsShaded = new Color * [TEXTURE_RES];
+	for (int i = 0; i < TEXTURE_RES; i++)
+	{
+		textureColsShaded[i] = new Color[TEXTURE_RES];
+	}
+
 	//---Ініціалізуємо колонки пікселів текстури---//
 	for (int x = 0; x < TEXTURE_RES; x++)
-		for (int y = 0; y < TEXTURE_RES; y++)
+		for (int y = 0; y < TEXTURE_RES; y++) {
 			textureCols[x][y] = textureColorMap[y * TEXTURE_RES + x];
+			textureColsShaded[x][y] = fadeColor(textureColorMap[y * TEXTURE_RES + x]);
+		}
+
+
 }
 
 void RenderImage::updateImage(RayCasting & rc)
 {
-	int textureCol; 
+	int texCol; 
 	int lineIndex;
 	float wallColTop;
 	float wallColSize;
@@ -86,7 +98,7 @@ void RenderImage::updateImage(RayCasting & rc)
 
 	for (int col = 0; col < WIN_WIDTH; col++)
 	{
-		textureCol = rc.raysPositionsOnWalls[col];
+		texCol = rc.raysPositionsOnWalls[col];
 
 		wallColSize = (WALL_HEIGHT * WTP / 2) / rc.raysLength[col];
 		pixelSize = wallColSize / TEXTURE_RES  * 2;
@@ -97,8 +109,15 @@ void RenderImage::updateImage(RayCasting & rc)
 			//---Зафарбовуємо стовпець стіни---//
 			lineIndex = (col * TEXTURE_RES + pixel) << 1;
 			
-			image[lineIndex    ].color = textureCols[textureCol][pixel];
-			image[lineIndex + 1].color = textureCols[textureCol][pixel];
+			if (rc.isWallHorizontal[col])
+			{
+				image[lineIndex].color = textureColsShaded[texCol][pixel];
+				image[lineIndex + 1].color = textureColsShaded[texCol][pixel];
+			}
+			else {
+				image[lineIndex].color = textureCols[texCol][pixel];
+				image[lineIndex + 1].color = textureCols[texCol][pixel];
+			}
 
 			//---Задаємо кординати---//
 			image[lineIndex    ].position = Vector2f(col, wallColTop);
@@ -117,6 +136,17 @@ void RenderImage::draw(RenderWindow& window)
 void RenderImage::deleteTexture()
 {
 	textureColorMap.clear();
+}
+
+Color RenderImage::fadeColor(Color& original)
+{
+	Color faded;
+
+	faded.r = int((float)original.r * SHADING);
+	faded.g = int((float)original.g * SHADING);
+	faded.b = int((float)original.b * SHADING);
+
+	return faded;
 }
 
 unsigned RenderImage::hexToDec(char hex)

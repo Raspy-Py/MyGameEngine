@@ -77,11 +77,24 @@ void Game::runGame()
 void Game::startLevel()
 {
     bool runThis = true;
+    int mouseDelta;
+    int mouseOldX = WIN_HALF_WIDTH;
+    int mouseNewX;
+    Vector2i centre(WIN_HALF_WIDTH, WIN_HALF_HEIGHT);
 
     RayCasting rc;
-    
+    Mouse::setPosition(centre, window);
+    window.setMouseCursorVisible(false);
+    CircleShape pointer(POINTER_RADIUS, 8);
+
+    pointer.setOrigin(POINTER_RADIUS, POINTER_RADIUS);
+    pointer.setPosition(WIN_HALF_WIDTH, WIN_HALF_HEIGHT);
+    pointer.setOutlineThickness(1.5);
+    pointer.setFillColor(Color(0,0,0,0));
+    pointer.setOutlineColor(Color(150,150,150));
+
     FPS fps;
-    Player player(100, 100);
+    Player player(map.cellSize * 1.5, map.cellSize * 1.5);
 
     while (window.isOpen() && runThis) {
 
@@ -99,6 +112,12 @@ void Game::startLevel()
             render.deleteTexture();
         }
 
+        ////---Обробка курування мишею---//
+        mouseNewX = Mouse::getPosition(window).x;
+        Mouse::setPosition(centre, window);
+        mouseDelta = mouseNewX - mouseOldX;
+
+        player.rotateByMouse(fps, mouseDelta);
         player.listenKeyboard(fps, map);
         rc.castRays(player, map);
         map.updateMinimap(player, rc.raysEndCords);
@@ -109,8 +128,11 @@ void Game::startLevel()
         render.draw(window);
         map.draw(window);
         fps.draw(window);
+        window.draw(pointer);
         window.display();
     }
+
+    window.setMouseCursorVisible(true);
 }
 
 void Game::mainMenu()
@@ -162,8 +184,8 @@ void Game::mainMenu()
             toDisplay = LEVEL_CHOOSE_MENU;
         }else if(createLevelButton.isPressed(window)) {
             background.setColor(Color(255,255,255,84));
-            //runThis = false;
-            //toDisplay = START_LEVEL;
+            runThis = false;
+            toDisplay = LEVEL_CREATION_MENU;
         }
 
         fps.updateFPS();
@@ -179,6 +201,50 @@ void Game::mainMenu()
 
 void Game::levelCreationMenu()
 {
+    Clock time;
+    Time elapsed;
+    time.restart();
+
+
+    bool runThis = true;
+    FPS fps;
+
+
+    //---Кнопки---//
+   
+    Button back(Vector2f(0, 0), Vector2f(float(WIN_WIDTH * 3) / 32, float(WIN_HEIGHT) / 18), Color(255, 255, 255, 0));
+
+    back.setTextFont(menuFont);
+    back.setTextString("back");
+    back.setTextSize(20);
+    back.setTextColor(Color(200, 200, 200, 200));
+    back.alignTextCentre(FONT_AR);
+
+    while (window.isOpen() && runThis) {
+
+        // Обробка подій
+        Event event;
+        while (window.pollEvent(event))
+            if (event.type == Event::Closed)
+                window.close();
+
+
+        //---Обробка натискань на кнопки---//
+        if (back.isPressed(window)) {
+            runThis = false;
+            toDisplay = MAIN_MENU;
+
+        }
+       
+
+        fps.updateFPS();
+
+        window.clear();
+        window.draw(background);
+        back.draw(window);
+        fps.draw(window);
+        window.display();
+    }
 }
 
 void Game::levelChooseMenu()
@@ -201,6 +267,7 @@ void Game::levelChooseMenu()
     Button prevTemplate(Vector2f(float(WIN_WIDTH) / 8, float(5 * WIN_HEIGHT) / 6), Vector2f(float(WIN_WIDTH) / 8, float(WIN_HEIGHT) / 9), Color(255, 255, 255, 0));
     Button nextTemplate(Vector2f(float(WIN_WIDTH * 3) / 4, float(5 * WIN_HEIGHT) / 6), Vector2f(float(WIN_WIDTH) / 8, float(WIN_HEIGHT) / 9), Color(255, 255, 255, 0));
     Button launchMap(Vector2f(float(WIN_WIDTH * 13) / 32, float(5 * WIN_HEIGHT) / 6), Vector2f(float(WIN_WIDTH * 3) / 16, float(WIN_HEIGHT) / 9), Color(255, 255, 255, 0));
+    Button back(Vector2f(0, 0), Vector2f(float(WIN_WIDTH * 3) / 32, float(WIN_HEIGHT) / 18), Color(255, 255, 255, 0));
 
     prevTemplate.setTextFont(menuFont);
     prevTemplate.setTextString("<<");
@@ -211,9 +278,15 @@ void Game::levelChooseMenu()
     launchMap.setTextFont(menuFont);
     launchMap.setTextString("Play");
 
+    back.setTextFont(menuFont);
+    back.setTextString("back");
+    back.setTextSize(20);
+    back.setTextColor(Color(200,200,200,200));
+
     launchMap.alignTextCentre(FONT_AR);
     nextTemplate.alignTextCentre(FONT_AR);
     prevTemplate.alignTextCentre(FONT_AR);
+    back.alignTextCentre(FONT_AR);
 
     while (window.isOpen() && runThis) {
 
@@ -223,9 +296,10 @@ void Game::levelChooseMenu()
             if (event.type == Event::Closed)
                 window.close();
 
+        
 
         //---Обробка натискань на кнопки---//
-        if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+        if (back.isPressed(window)) {
             runThis = false;
             toDisplay = MAIN_MENU;
             unloadTemplates();
@@ -273,6 +347,7 @@ void Game::levelChooseMenu()
         nextTemplate.draw(window);
         prevTemplate.draw(window);
         launchMap.draw(window);
+        back.draw(window);
         fps.draw(window);
         window.display();
     }
@@ -321,6 +396,8 @@ void Game::loadTemplates()
         fl = stringToColor(buff);
         floorColor.push_back(fl);
     }
+
+    file.close();
 }
 
 void Game::unloadTemplates()
@@ -433,7 +510,8 @@ void Game::switchTemplate(int tempIndex)
     Vector2f targetSize(float(WIN_WIDTH * 3) / 16, float(WIN_HEIGHT) / 3);
     wallSpritePreview.setScale(
         targetSize.x / wallSpritePreview.getLocalBounds().width,
-        targetSize.y / wallSpritePreview.getLocalBounds().height);
+        targetSize.y / wallSpritePreview.getLocalBounds().height
+    );
 
 
     //---Налаштовуємо перегляд кольорів підлоги та стелі---//

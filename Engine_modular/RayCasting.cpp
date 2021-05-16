@@ -9,6 +9,7 @@ RayCasting::RayCasting()
 	raysLength = new float[WIN_WIDTH];
 	raysPositionsOnWalls = new int[WIN_WIDTH];
 	raysEndCords = new float*[WIN_WIDTH];
+	isWallHorizontal = new bool[WIN_WIDTH];
 
 	for (int i = 0; i < WIN_WIDTH; i++)
 	{
@@ -88,7 +89,7 @@ void RayCasting::castRays(Player& player, Map& map)
 		// ѕерев≥р€Їмо чи не виходить пром≥нь за меж≥ р≥вн€
 		// та чи натраплюЇ на ст≥ну
 		if (xa >= worldSize || ya >= worldSize || xa < 0 || ya < 0) iter = mapSize;
-		else if (map.levelPlan[(int)ya / quadSize][(int)xa / quadSize]) iter = mapSize;
+		else if (map.levelPlan[int(ya) / quadSize][int(xa) / quadSize]) iter = mapSize;
 		else iter = 1;
 
 		while (iter < mapSize)
@@ -99,7 +100,7 @@ void RayCasting::castRays(Player& player, Map& map)
 			ya += dy;
 
 			if (xa >= worldSize || ya >= worldSize || xa < 0 || ya < 0) break;
-			if (map.levelPlan[(int)ya / quadSize][(int)xa / quadSize] ) break;
+			if (map.levelPlan[int(ya) / quadSize][int(xa) / quadSize] ) break;
 		}
 		xv = xa; yv = ya; // «берг≥аЇмо координати к≥нц€ промен€
 
@@ -157,6 +158,7 @@ void RayCasting::castRays(Player& player, Map& map)
 			raysEndCords[rNumber][1] = yh;
 			raysLength[rNumber] = hLen * cos(player.direction - ra);
 			raysPositionsOnWalls[rNumber] = (int)xh % TEXTURE_RES;
+			isWallHorizontal[rNumber] = true;
 		}
 		else
 		{
@@ -164,6 +166,7 @@ void RayCasting::castRays(Player& player, Map& map)
 			raysEndCords[rNumber][1] = yv;
 			raysLength[rNumber] = vLen * cos(player.direction - ra);
 			raysPositionsOnWalls[rNumber] = (int)yv % TEXTURE_RES;
+			isWallHorizontal[rNumber] = false;
 		}
 	}
 }

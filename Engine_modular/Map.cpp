@@ -138,7 +138,7 @@ void Map::draw(RenderWindow& window)
 {
     window.draw(minimapBackground);
     window.draw(walls);
-    //window.draw(rays);
+    window.draw(rays);
     window.draw(playerMarker);
     window.draw(playerDirPointer);
 }
@@ -156,7 +156,7 @@ void Map::updateMinimap(Player& player, float** raysEndCords)
     xRayStart = player.position.x * minimapToMapRelation;
     yRayStart = player.position.y * minimapToMapRelation;
 
-   /* for (int i = 0; i < WIN_WIDTH * 2; i+=2)
+    for (int i = 0; i < WIN_WIDTH * 2; i+=2)
     {
 
         xRayEnd = raysEndCords[i / 2][0] * minimapToMapRelation;
@@ -164,7 +164,7 @@ void Map::updateMinimap(Player& player, float** raysEndCords)
 
         rays[i].position = Vector2f(xRayStart, yRayStart);
         rays[i + 1].position = Vector2f(xRayEnd, yRayEnd);
-    }*/
+    }
 
     ////////////////////////////////////////////////
     // Оновлюємо вказівник напрямку руху гравця   //
