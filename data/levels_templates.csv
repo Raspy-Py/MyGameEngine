@@ -1,4 +1,4 @@
 ~ Underwater Maze ~;../data/levels/level.csv;../data/textures/coral.bmp;6D81AC;95B1ED
 ~ Huge Basement ~;../data/levels/level1.csv;../data/textures/brick.bmp;a0a0a0;ffffff
 ~ Bee Castle ~;../data/levels/level2.csv;../data/textures/bee.bmp;f7b602;f7b602
-~ Test Map ~;../data/levels/test map.csv;../data/textures/brick.bmp;a0a0a0;cccccc
+~ Test Map ~;../data/levels/test map.csv;../data/textures/monster.bmp;a0a0a0;cccccc

@@ -40,7 +40,9 @@ void Game::runGame()
      //settings.antialiasingLevel = 8;
 
      // Створюємо вікно
-     window.create(VideoMode(WIN_WIDTH - 1, WIN_HEIGHT), "RayCastingGameEngine", Style::Default, settings);
+     window.create(VideoMode(WIN_WIDTH - 1, WIN_HEIGHT), "RayCastingGameEngine", Style::Titlebar | Style::Close, settings);
+     window.setVerticalSyncEnabled(true);
+
 
     while (window.isOpen()) {
 

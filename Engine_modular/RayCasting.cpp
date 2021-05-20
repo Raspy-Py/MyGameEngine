@@ -47,12 +47,12 @@ void RayCasting::castRays(Player& player, Map& map)
 	////////////////////////////////////////////////
 
 
-	float x0 = player.position.x; // Координата гравця
-	float y0 = player.position.y; // Координата гравця
+	float x0 = player.getPosition().x; // Координата гравця
+	float y0 = player.getPosition().y; // Координата гравця
 	float xa = 0, ya = 0;         // Координати першого перетину променя із сіткою
 	float dx = 0, dy = 0;         // Крок
 	float ra;                     // Напрямок промення в радіанах
-	float rau = player.direction - FOV/2; // Ненормалізований кут
+	float rau = player.getDirection() - FOV/2; // Ненормалізований кут
 	float tanA;
 	float hLen, vLen;             // Довжини променів
 	int xh, yh, xv, yv;           // Кординати кінців променів
@@ -156,7 +156,7 @@ void RayCasting::castRays(Player& player, Map& map)
 		if (hLen < vLen) {
 			raysEndCords[rNumber][0] = xh;
 			raysEndCords[rNumber][1] = yh;
-			raysLength[rNumber] = hLen * cos(player.direction - ra);
+			raysLength[rNumber] = hLen * cos(player.getDirection() - ra);
 			raysPositionsOnWalls[rNumber] = (int)xh % TEXTURE_RES;
 			isWallHorizontal[rNumber] = true;
 		}
@@ -164,7 +164,7 @@ void RayCasting::castRays(Player& player, Map& map)
 		{
 			raysEndCords[rNumber][0] = xv;
 			raysEndCords[rNumber][1] = yv;
-			raysLength[rNumber] = vLen * cos(player.direction - ra);
+			raysLength[rNumber] = vLen * cos(player.getDirection() - ra);
 			raysPositionsOnWalls[rNumber] = (int)yv % TEXTURE_RES;
 			isWallHorizontal[rNumber] = false;
 		}

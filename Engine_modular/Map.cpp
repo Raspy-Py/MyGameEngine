@@ -153,8 +153,8 @@ void Map::updateMinimap(Player& player, float** raysEndCords)
     float xRayEnd, yRayEnd;
     float xPointerEnd, yPointerEnd;
     
-    xRayStart = player.position.x * minimapToMapRelation;
-    yRayStart = player.position.y * minimapToMapRelation;
+    xRayStart = player.getPosition().x * minimapToMapRelation;
+    yRayStart = player.getPosition().y * minimapToMapRelation;
 
     for (int i = 0; i < WIN_WIDTH * 2; i+=2)
     {
@@ -170,8 +170,8 @@ void Map::updateMinimap(Player& player, float** raysEndCords)
     // Оновлюємо вказівник напрямку руху гравця   //
     ////////////////////////////////////////////////
 
-    xPointerEnd = (xRayStart + cellSize * cos(player.direction) * minimapToMapRelation);
-    yPointerEnd = (yRayStart + cellSize * sin(player.direction) * minimapToMapRelation);
+    xPointerEnd = (xRayStart + cellSize * cos(player.getDirection()) * minimapToMapRelation);
+    yPointerEnd = (yRayStart + cellSize * sin(player.getDirection()) * minimapToMapRelation);
 
     playerDirPointer[0].position = Vector2f(xRayStart, yRayStart);
     playerDirPointer[1].position = Vector2f(xPointerEnd, yPointerEnd);

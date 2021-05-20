@@ -43,17 +43,22 @@ void RenderImage::init(std::string pathToWallTexture, Color& floorColor, Color& 
 	file.read(&buff[0], 3);
 	bias = hexToDec(buff[0]);
 
+	int R, G, B, A;
+
 	file.seekg(bias);
 
 	for (int i = 0; i < TEXTURE_RES * TEXTURE_RES; i++)
 	{
 		file.read(&buff[0], n);
 
-		textureColorMap.push_back(Color(
-			hexToDec(buff[2]),
-			hexToDec(buff[1]),
-			hexToDec(buff[0])
-		));
+		R = hexToDec(buff[2]);
+		G = hexToDec(buff[1]);
+		B = hexToDec(buff[0]);
+
+		if (R + G + B == 255 * 3) A = 0;
+		else A = 255;
+		
+		textureColorMap.push_back(Color(R,G,B,A));
 	}
 
 	file.close();
@@ -145,6 +150,7 @@ Color RenderImage::fadeColor(Color& original)
 	faded.r = int((float)original.r * SHADING);
 	faded.g = int((float)original.g * SHADING);
 	faded.b = int((float)original.b * SHADING);
+	faded.a = original.a;
 
 	return faded;
 }

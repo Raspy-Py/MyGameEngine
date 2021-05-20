@@ -5,32 +5,29 @@
 #include "Configs.h"
 #include "FPSHandler.h"
 #include "Map.h"
+#include "Actor.h"
 
 using namespace sf;
 using namespace std;
 
 class Map;
 
-class Player
+class Player : public Actor
 {
 public:
 	Player(float, float);
 	~Player();
-
-	int colBoxSize;
-	float speedInStrafe;
-	float direction;
-	float health;
-	float speed;
-	float rotationSpeed;
-	float strafeSpeed;
-	Vector2f position;
 
 	virtual void listenKeyboard(FPS&, Map&);
 	void takeDamage(int);
 	void rotateByMouse(FPS&, int);
 
 private:
+	int colBoxSize;
+	float speedInStrafe;
+	float rotationSpeed;
+	float strafeSpeed;
+
 	void moveForward(FPS&, Map&);
 	void moveBackward(FPS&, Map&);
 	void strafeRigth(FPS&, Map&);

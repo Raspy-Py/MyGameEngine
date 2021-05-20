@@ -28,7 +28,7 @@ const int MIN_ELAPSED = 200;
 ////////////////////////////////////////////////
 const int PLAYER_DEFAULT_HEALTH = 100;
 const int MAX_MOUSE_DELTA = 65;
-const int PLAYER_COLISION_BOX_SIZE = 7;        // Половина сторини коліжіонбокса
+const int PLAYER_COLISION_BOX_SIZE = 7;         // Половина сторини коліжіонбокса
 const float PLAYER_DEFAULT_SPEED = 3; 
 const float STRAFE_SPEED = 1.5;
 const float PLAYER_DEFAULT_ROTATION_SPEED = 0.05;

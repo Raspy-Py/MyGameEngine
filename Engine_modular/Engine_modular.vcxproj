@@ -145,21 +145,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Engine_modular.cpp" />
     <ClCompile Include="FPSHandler.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="monster.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RayCasting.cpp" />
     <ClCompile Include="Render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Configs.h" />
     <ClInclude Include="FPSHandler.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RayCasting.h" />
     <ClInclude Include="Render.h" />
