@@ -14,7 +14,7 @@ public:
 	RenderImage();
 	~RenderImage();
 
-	void init(std::string, Color&, Color&);
+	void init(std::string, Color, Color);
 	void updateImage(RayCasting &);
 	void draw(RenderWindow&);
 	void deleteTexture();

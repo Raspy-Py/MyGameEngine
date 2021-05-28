@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MazeGenerator", "MazeGenera
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MapEditor", "MapEditor\MapEditor.vcxproj", "{BAAE61CA-7A62-4DCB-8CEA-ECF2304EEA37}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PathSearchAlgorithm", "PathSearchAlgorithm\PathSearchAlgorithm.vcxproj", "{6031E4D7-5338-4D85-AA7D-DD3CC952394A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{BAAE61CA-7A62-4DCB-8CEA-ECF2304EEA37}.Release|x64.Build.0 = Release|x64
 		{BAAE61CA-7A62-4DCB-8CEA-ECF2304EEA37}.Release|x86.ActiveCfg = Release|Win32
 		{BAAE61CA-7A62-4DCB-8CEA-ECF2304EEA37}.Release|x86.Build.0 = Release|Win32
+		{6031E4D7-5338-4D85-AA7D-DD3CC952394A}.Debug|x64.ActiveCfg = Debug|x64
+		{6031E4D7-5338-4D85-AA7D-DD3CC952394A}.Debug|x64.Build.0 = Debug|x64
+		{6031E4D7-5338-4D85-AA7D-DD3CC952394A}.Debug|x86.ActiveCfg = Debug|Win32
+		{6031E4D7-5338-4D85-AA7D-DD3CC952394A}.Debug|x86.Build.0 = Debug|Win32
+		{6031E4D7-5338-4D85-AA7D-DD3CC952394A}.Release|x64.ActiveCfg = Release|x64
+		{6031E4D7-5338-4D85-AA7D-DD3CC952394A}.Release|x64.Build.0 = Release|x64
+		{6031E4D7-5338-4D85-AA7D-DD3CC952394A}.Release|x86.ActiveCfg = Release|Win32
+		{6031E4D7-5338-4D85-AA7D-DD3CC952394A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

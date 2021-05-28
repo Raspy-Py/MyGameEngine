@@ -20,7 +20,7 @@ RenderImage::~RenderImage()
 {
 }
 
-void RenderImage::init(std::string pathToWallTexture, Color& floorColor, Color& ceilingColor)
+void RenderImage::init(std::string pathToWallTexture, Color floorColor, Color ceilingColor)
 {
 	////////////////////////////////////////////////
 	// 	Налаштовуємо стелю та підлогу             //    

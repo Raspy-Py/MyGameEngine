@@ -26,10 +26,12 @@ struct Cell
     int y;
 };
 
-int** genEmptyField(int);
 void updateMapImage(int**, VertexArray&, int&);
-void genMaze(int**, int);
 void printMatrix(int**, int, Cell cell = { 10000,10000 });
+
+int** genEmptyField(int);
+void genMaze(int**, int);
+void crashWalls(int** ,int);
 bool unvisitedNeighbors(int**, int, Cell&);
 bool onField(int, int, int);
 Cell findNewCell(int**, int, Cell&);
@@ -338,6 +340,23 @@ void genMaze(int** maze, int mazeSize)
         stack.pop();
     }*/
 
+    crashWalls(maze, mazeSize);
+}
+
+void crashWalls(int** maze, int mazeSize)
+{
+    int i, j;
+
+    for (int n = 0; n < pow((float)mazeSize, 1.4); n++)
+    {
+        i = 1 + rand() % (mazeSize - 2);
+        j = 1 + rand() % (mazeSize - 2);
+        if ((!(maze[i - 1][j]) && !(maze[i + 1][j]) && (maze[i][j - 1]) && (maze[i][j + 1])) ||
+            ((maze[i - 1][j]) && (maze[i + 1][j]) && !(maze[i][j - 1]) && !(maze[i][j + 1]))) {
+            maze[i][j] = 0;
+        }
+
+    }
 }
 
 void printMatrix(int** A, int n, Cell cell)

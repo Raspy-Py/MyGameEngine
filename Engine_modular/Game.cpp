@@ -211,16 +211,44 @@ void Game::levelCreationMenu()
     bool runThis = true;
     FPS fps;
 
+    int levelToGenerateSize = 0;
 
     //---Кнопки---//
-   
+    Button generateButton(Vector2f(float(WIN_WIDTH * 3) / 8, float(WIN_HEIGHT * 19) / 36), Vector2f(float(WIN_WIDTH) / 4, float(WIN_HEIGHT) / 9), Color(255, 255, 255, 0));
+    Button minusButton(Vector2f(float(WIN_WIDTH * 3) / 8, float(WIN_HEIGHT * 13) / 36), Vector2f(float(WIN_WIDTH) / 16, float(WIN_HEIGHT) / 9), Color(255, 255, 255, 0));
+    Button plusButton(Vector2f(float(WIN_WIDTH * 9) / 16, float(WIN_HEIGHT * 13) / 36), Vector2f(float(WIN_WIDTH) / 16, float(WIN_HEIGHT) / 9), Color(255, 255, 255, 0));
     Button back(Vector2f(0, 0), Vector2f(float(WIN_WIDTH * 3) / 32, float(WIN_HEIGHT) / 18), Color(255, 255, 255, 0));
+
+    minusButton.setTextFont(menuFont);
+    minusButton.setTextString("-");
+    minusButton.setTextSize(30);
+    minusButton.setTextColor(Color(255, 255, 255, 255));
+    minusButton.alignTextCentre(FONT_AR);
+
+    plusButton.setTextFont(menuFont);
+    plusButton.setTextString("+");
+    plusButton.setTextSize(30);
+    plusButton.setTextColor(Color(255, 255, 255, 255));
+    plusButton.alignTextCentre(FONT_AR);
+
+    generateButton.setTextFont(menuFont);
+    generateButton.setTextString("Generate ");
+    generateButton.setTextSize(30);
+    generateButton.setTextColor(Color(255, 255, 255, 255));
+    generateButton.alignTextCentre(FONT_AR);
 
     back.setTextFont(menuFont);
     back.setTextString("back");
     back.setTextSize(20);
     back.setTextColor(Color(200, 200, 200, 200));
     back.alignTextCentre(FONT_AR);
+
+    //---Написи---//
+    Text genLevelSizeText;
+    genLevelSizeText.setCharacterSize(30);
+    genLevelSizeText.setFont(menuFont);
+    genLevelSizeText.setString("15");
+    genLevelSizeText.setPosition(float(WIN_HALF_WIDTH) - 30.0 * FONT_AR, float(WIN_HEIGHT * 15) / 36 - 15.0);
 
     while (window.isOpen() && runThis) {
 
@@ -232,7 +260,41 @@ void Game::levelCreationMenu()
 
 
         //---Обробка натискань на кнопки---//
-        if (back.isPressed(window)) {
+        if (minusButton.isPressed(window)) {
+
+            elapsed = time.getElapsedTime();
+
+            if (elapsed.asMilliseconds() > 75) {
+                levelToGenerateSize-=2;
+                if (levelToGenerateSize < 0) levelToGenerateSize = 50;
+
+                genLevelSizeText.setString(to_string(15 + levelToGenerateSize));
+                time.restart();
+            }
+        }
+        else if (plusButton.isPressed(window)) {
+            elapsed = time.getElapsedTime();
+
+            if (elapsed.asMilliseconds() > 75) {
+                levelToGenerateSize = (levelToGenerateSize + 2) % 51;
+
+                genLevelSizeText.setString(to_string(15 + levelToGenerateSize));
+                time.restart();
+            }
+        }
+        else if (generateButton.isPressed(window)) {     
+            elapsed = time.getElapsedTime();
+
+            if (elapsed.asMilliseconds() > 200) {
+                render.init("../data/textures/brick.bmp", Color(98, 107, 67), Color(56, 61, 38));
+                map.generateMap(15 + levelToGenerateSize, MINIMAP_SIZE);
+
+                toDisplay = START_LEVEL;
+                runThis = false;
+                time.restart();
+            }
+        }
+        else if (back.isPressed(window)) {
             runThis = false;
             toDisplay = MAIN_MENU;
 
@@ -243,7 +305,11 @@ void Game::levelCreationMenu()
 
         window.clear();
         window.draw(background);
+        minusButton.draw(window);
+        plusButton.draw(window);
+        generateButton.draw(window);
         back.draw(window);
+        window.draw(genLevelSizeText);
         fps.draw(window);
         window.display();
     }
@@ -417,7 +483,7 @@ void Game::switchTemplate(int tempIndex)
     //Налаштовуємо попередній перегляд схеми рівня//
     ////////////////////////////////////////////////
 
-    //---Налаштування перегляду назви рінвя---//
+    //---Налаштування перегляду назви рівня---//
 
     namePreview.setString(levelName[tempIndex]);
 
