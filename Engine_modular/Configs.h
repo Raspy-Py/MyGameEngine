@@ -4,8 +4,6 @@
 // Місцезнаходження ресурсів гри              //
 ////////////////////////////////////////////////
 const std::string PATH_MM_BACKGROUND = "../data/pictures/main_menu_background.jpeg";
-const std::string PATH_LEVEL = "../data/levels/level.csv";
-const std::string PATH_LEVEL_ONE = "../data/levels/level1.csv";
 const std::string PATH_WALL_TEXTURE = "../data/textures/beacon.bmp";
 const std::string PATH_DEFAULT_FONT = "../data/fonts/basic_font.ttf";
 const std::string PATH_TEMPLATES = "../data/levels_templates.csv";
@@ -26,9 +24,9 @@ const int MIN_ELAPSED = 200;
 ////////////////////////////////////////////////
 // Параметри ініціалізація гравця             //
 ////////////////////////////////////////////////
-const int PLAYER_DEFAULT_HEALTH = 100;
 const int MAX_MOUSE_DELTA = 65;
 const int PLAYER_COLISION_BOX_SIZE = 7;         // Половина сторини коліжіонбокса
+const float PLAYER_DEFAULT_HEALTH = 100;
 const float PLAYER_DEFAULT_SPEED = 3; 
 const float STRAFE_SPEED = 1.5;
 const float PLAYER_DEFAULT_ROTATION_SPEED = 0.05;

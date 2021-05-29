@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <fstream>
+#include "Monster.h"
 #include "Map.h"
 #include "Player.h"
 #include "RayCasting.h"

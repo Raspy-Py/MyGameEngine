@@ -85,8 +85,9 @@ void Game::startLevel()
     Vector2i centre(WIN_HALF_WIDTH, WIN_HALF_HEIGHT);
 
     RayCasting rc;
-    Mouse::setPosition(centre, window);
+
     window.setMouseCursorVisible(false);
+    Mouse::setPosition(centre, window);
     CircleShape pointer(POINTER_RADIUS, 8);
 
     pointer.setOrigin(POINTER_RADIUS, POINTER_RADIUS);
@@ -139,6 +140,10 @@ void Game::startLevel()
 
 void Game::mainMenu()
 {
+    ///////////////////////////////////
+    // testing Area
+    ///////////////////////////////////
+
     bool runThis = true;
 
     FPS fps;
@@ -264,7 +269,7 @@ void Game::levelCreationMenu()
 
             elapsed = time.getElapsedTime();
 
-            if (elapsed.asMilliseconds() > 75) {
+            if (elapsed.asMilliseconds() > 85) {
                 levelToGenerateSize-=2;
                 if (levelToGenerateSize < 0) levelToGenerateSize = 50;
 
@@ -275,8 +280,10 @@ void Game::levelCreationMenu()
         else if (plusButton.isPressed(window)) {
             elapsed = time.getElapsedTime();
 
-            if (elapsed.asMilliseconds() > 75) {
-                levelToGenerateSize = (levelToGenerateSize + 2) % 51;
+            if (elapsed.asMilliseconds() > 85) {
+                levelToGenerateSize += 2;
+                if (levelToGenerateSize >50 ) levelToGenerateSize = 0;
+
 
                 genLevelSizeText.setString(to_string(15 + levelToGenerateSize));
                 time.restart();

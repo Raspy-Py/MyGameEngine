@@ -9,7 +9,7 @@
 using namespace std;
 using namespace sf;
 
-const int WIN_SIZE = 640;
+const int WIN_SIZE = 720;
 
 const string DIR = "../data/levels/";
 
@@ -41,7 +41,12 @@ void printMatrix(int**, int, Vector2i cell = { 10000,10000 });
 bool unvisitedNeighbors(int**, int, Vector2i&);
 bool onField(int, int, int);
 Vector2i findNewCell(int**, int, Vector2i&);
-vector<Vector2i>& aStarPathFind(int**, int, const Vector2i&, const Vector2i&);
+
+vector<Vector2i> aStarPathFind(int**, int, const Vector2i&, const Vector2i&);
+Node* chooseCurrentNode(vector<Node*>&);
+int distance(Vector2i, Vector2i);
+void removeFromOpenAndClose(Node*, vector<Node*>&);
+void displayPath(vector<Vector2i>&, VertexArray&, int);
 
 
 int main() {
@@ -57,7 +62,9 @@ int main() {
     string mapName;
 
     //---Path finding data---//
-
+    Vector2i start = {-1,-1};
+    Vector2i target;
+    vector<Vector2i> path;
 
     //---Primary settings--//
     cells.setPrimitiveType(Quads);
@@ -106,8 +113,76 @@ int main() {
                 time.restart();
             }
         }
+        else if (Keyboard::isKeyPressed(Keyboard::C)) {
+            elapsed = time.getElapsedTime();
+            if (elapsed.asMilliseconds() > 200)
+            {
+                crashWalls(map, mapSize);
+                updateMapImage(map, cells, mapSize);
 
-        //drawWall(map, cells, mapSize, window);
+                time.restart();
+            }
+        }
+        if (Keyboard::isKeyPressed(Keyboard::D)) {
+            float cellSize = (float)WIN_SIZE / mapSize;
+
+            Vector2i mPos = Mouse::getPosition(window);
+
+            if (Mouse::isButtonPressed(Mouse::Left))
+            {
+
+                if (mPos.x < WIN_SIZE && mPos.x >= 0 && mPos.y < WIN_SIZE && mPos.y >=0)
+                {
+
+                    int i = mPos.y / cellSize;
+                    int j = mPos.x / cellSize;
+
+                    target = { i,j };
+
+                    Color quadColor = Color(255, 80, 80);
+
+                    cells[(i * mapSize + j) * 4 + 0].color = quadColor;
+                    cells[(i * mapSize + j) * 4 + 1].color = quadColor;
+                    cells[(i * mapSize + j) * 4 + 2].color = quadColor;
+                    cells[(i * mapSize + j) * 4 + 3].color = quadColor;
+
+                    // Знаходимо шлях
+                    elapsed = time.getElapsedTime();
+                    if (elapsed.asMilliseconds() > 200 &&
+                        start.x != -1)
+                    {
+                        path = aStarPathFind(map, mapSize, start, target);
+                        //cout << path.size() << endl;
+
+                        displayPath(path, cells, mapSize);
+
+                        time.restart();
+                    }
+
+                }
+            }
+            else if (Mouse::isButtonPressed(Mouse::Right))
+            {
+                updateMapImage(map, cells, mapSize);
+
+                if (mPos.x < WIN_SIZE && mPos.x >= 0 && mPos.y < WIN_SIZE && mPos.y >=0)
+                {
+                    int i = mPos.y / cellSize;
+                    int j = mPos.x / cellSize;
+
+                    start = { i, j };
+
+                    Color quadColor = Color(80, 80, 255);
+
+                    cells[(i * mapSize + j) * 4 + 0].color = quadColor;
+                    cells[(i * mapSize + j) * 4 + 1].color = quadColor;
+                    cells[(i * mapSize + j) * 4 + 2].color = quadColor;
+                    cells[(i * mapSize + j) * 4 + 3].color = quadColor;
+                }
+            }
+        }
+        else
+            drawWall(map, cells, mapSize, window);
 
         window.clear();
         window.draw(background);
@@ -327,7 +402,7 @@ void genMaze(int** maze, int mazeSize)
 
     delete[] visitedCells;
 
-    crashWalls(maze, mazeSize);
+    //crashWalls(maze, mazeSize);
 }
 
 void crashWalls(int** maze, int mazeSize)
@@ -439,10 +514,16 @@ Vector2i findNewCell(int** visited, int mazeSize, Vector2i& cell)
     return res;
 }
 
-vector<Vector2i>& aStarPathFind(int** maze, int mazeSize,const Vector2i& start, const Vector2i& target)
+vector<Vector2i> aStarPathFind(int** maze, int mazeSize, const Vector2i& start, const Vector2i& target)
 {
+    //---Для замірювання часу---//
+    Clock time;
+    Time elapsed;
+    time.restart(); 
+
     vector<Vector2i> path;
     vector<Node*> openNodes;
+    vector<Vector2i> deltas = { Vector2i(-1,0),Vector2i(1,0),Vector2i(0,-1),Vector2i(0,1) };
     Node* current;
     Node* neighbour;
 
@@ -458,7 +539,7 @@ vector<Vector2i>& aStarPathFind(int** maze, int mazeSize,const Vector2i& start, 
             graph[i][j].gridPos.x = j;
             graph[i][j].gridPos.y = i;
             
-            if (maze[i][j])
+            if (maze[j][i])
             {
                 graph[i][j].type = NodeType::WALL;
             }
@@ -469,17 +550,125 @@ vector<Vector2i>& aStarPathFind(int** maze, int mazeSize,const Vector2i& start, 
     }
 
     //---Алгоритм---//
+    int i;
+    int j;
 
     graph[start.y][start.x].type = NodeType::OPEN;
+    graph[start.y][start.x].g = 0;
+    graph[start.y][start.x].h = distance(graph[start.y][start.x].gridPos, target);
+    graph[start.y][start.x].f = graph[start.y][start.x].h;
+    graph[start.y][start.x].parent = nullptr;
     openNodes.push_back(&graph[start.y][start.x]);
 
     while (true)
     {
 
+        //---Крок 1---//
+        current = chooseCurrentNode(openNodes);
+        removeFromOpenAndClose(current, openNodes);
+
+
+        //---Крок 2---//
+        if (current->gridPos == target)
+            break;
+
+        //---Крок 3---//
+        i = current->gridPos.y;
+        j = current->gridPos.x;
+
+        for (auto d = deltas.begin(); d != deltas.end(); ++d)
+        {
+            neighbour = &graph[i + d->y][j + d->x];
+
+            if ((!d->x && !d->y) ||
+                neighbour->type == NodeType::WALL ||
+                neighbour->type == NodeType::CLOSED
+                ) continue;
+
+            if (neighbour->type != NodeType::OPEN ||
+                (current->g + distance(neighbour->gridPos, target) + 1)
+                < neighbour->f)
+            {
+                neighbour->g = current->g + 1;
+                neighbour->h = distance(neighbour->gridPos, target);
+                neighbour->f = neighbour->g + neighbour->h;
+                neighbour->parent = current;
+                neighbour->type = NodeType::OPEN;
+                openNodes.push_back(neighbour);
+            }
+        }
+    }
+
+    //---Формуємо шлях---//
+    
+    Node* nextNode = &graph[target.y][target.x];
+    path.push_back(nextNode->gridPos);
+
+    while (nextNode->parent)
+    {
+        nextNode = nextNode->parent;
+        path.push_back(nextNode->gridPos);
     }
 
 
+    //---Чистимо пам'ять---//
+    for (int i = 0; i < mazeSize; i++)
+    {
+        delete[] graph[i];
+    }
+    delete[] graph;
+
+    elapsed = time.getElapsedTime();
+
+    cout << "Path found in: " << elapsed.asMilliseconds() << "ms" << endl;
+
     return path;
+}
+
+Node* chooseCurrentNode(vector<Node*>& openNodes) {
+    Node* chosenNode = openNodes[0];
+
+    for (int i = 1; i < openNodes.size(); i++)
+    {
+        if (chosenNode->f > openNodes[i]->f)
+        {
+            chosenNode = openNodes[i];
+        }
+    }
+
+    return chosenNode;
+}
+
+int distance(Vector2i a, Vector2i b)
+{
+    return abs(a.x - b.x) + abs(a.y - b.y);
+}
+
+void removeFromOpenAndClose(Node* node, vector<Node*>& openNodes) {
+    node->type = NodeType::CLOSED;
+
+    for (auto iterNode = openNodes.begin(); iterNode != openNodes.end(); ++iterNode)
+    {
+        if ((*iterNode)->gridPos.x == node->gridPos.x && 
+            (*iterNode)->gridPos.y == node->gridPos.y)
+        {
+            openNodes.erase(iterNode);
+            break;
+        }
+    }
+}
+
+void displayPath(vector<Vector2i>& path, VertexArray& cells, int mapSize)
+{
+    for (auto d = path.begin(); d != path.end() - 1; ++d)
+    {
+        Color quadColor = Color(80, 255, 80);
+
+        cells[(d->x * mapSize + d->y) * 4 + 0].color = quadColor;
+        cells[(d->x * mapSize + d->y) * 4 + 1].color = quadColor;
+        cells[(d->x * mapSize + d->y) * 4 + 2].color = quadColor;
+        cells[(d->x * mapSize + d->y) * 4 + 3].color = quadColor;
+    }
 }
 
 void printM2(int** A, int n)

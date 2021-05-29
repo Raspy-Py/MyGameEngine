@@ -12,6 +12,7 @@ public:
 	float getHealth();
 	float getSpeed();
 	float getDirection();
+	float getDamage();
 	Vector2f getPosition();
 	void setPosition(Vector2f);
 
@@ -19,6 +20,7 @@ protected:
 	float health;
 	float speed;
 	float direction;
+	float damage;
 	Vector2f position;
 };
 

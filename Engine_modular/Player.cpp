@@ -23,14 +23,14 @@ void Player::listenKeyboard(FPS& fps, Map& map)
 {
     speed = PLAYER_DEFAULT_SPEED;
 
-    if      (Keyboard::isKeyPressed(Keyboard::A)) { strafeLeft(fps, map); } // стрейф вліво
-    else if (Keyboard::isKeyPressed(Keyboard::D)) { strafeRigth(fps, map); } // стрейф вправо
+    if      (Keyboard::isKeyPressed(Keyboard::A)) { strafeLeft(fps, map); }
+    else if (Keyboard::isKeyPressed(Keyboard::D)) { strafeRigth(fps, map); }
     
-    if      (Keyboard::isKeyPressed(Keyboard::W)) { moveForward(fps, map); } // рухатись вперед
-    else if (Keyboard::isKeyPressed(Keyboard::S)) { moveBackward(fps, map); } // рухатись назад
+    if      (Keyboard::isKeyPressed(Keyboard::W)) { moveForward(fps, map); } 
+    else if (Keyboard::isKeyPressed(Keyboard::S)) { moveBackward(fps, map); } 
 
 
-    if      (Keyboard::isKeyPressed(Keyboard::P)) { getInfo(); } // інформація для налагодження
+    if      (Keyboard::isKeyPressed(Keyboard::P)) { getInfo(); } // TODO: remove
 }
 
 void Player::takeDamage(int damage)

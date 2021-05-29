@@ -37,6 +37,7 @@ private:
 	CircleShape playerMarker;
 	RectangleShape minimapBackground;
 
+	
 	int** genEmptyField(int);
 	void genMaze(int**, int);
 	void crashWalls(int**, int);

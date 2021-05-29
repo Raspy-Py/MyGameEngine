@@ -23,6 +23,11 @@ float Actor::getDirection()
 	return direction;
 }
 
+float Actor::getDamage()
+{
+	return damage;
+}
+
 Vector2f Actor::getPosition()
 {
 	return position;
