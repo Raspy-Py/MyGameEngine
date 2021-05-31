@@ -98,6 +98,10 @@ void Game::startLevel()
 
     FPS fps;
     Player player(map.cellSize * 1.5, map.cellSize * 1.5);
+    Monster monster_1;
+
+    monster_1.setPosition(Vector2f(map.cellSize * 1.5, map.cellSize * 1.5));
+    monster_1.setSpeed(2);
 
     while (window.isOpen() && runThis) {
 
@@ -122,8 +126,9 @@ void Game::startLevel()
 
         player.rotateByMouse(fps, mouseDelta);
         player.listenKeyboard(fps, map);
+        monster_1.makeStep(fps, map, player);
         rc.castRays(player, map);
-        map.updateMinimap(player, rc.raysEndCords);
+        map.updateMinimap(player,monster_1, rc.raysEndCords);
         render.updateImage(rc);
         fps.updateFPS();
 
@@ -134,6 +139,8 @@ void Game::startLevel()
         window.draw(pointer);
         window.display();
     }
+
+    map.clearInfo();
 
     window.setMouseCursorVisible(true);
 }

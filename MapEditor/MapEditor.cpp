@@ -107,6 +107,16 @@ int main() {
                 time.restart();
             }
         }
+        else if (Keyboard::isKeyPressed(Keyboard::C)) {
+            elapsed = time.getElapsedTime();
+            if (elapsed.asMilliseconds() > 200)
+            {
+                crashWalls(map, mapSize);
+                updateMapImage(map, cells, mapSize);
+
+                time.restart();
+            }
+        }
 
 		drawWall(map, cells, mapSize, window);
 
@@ -340,7 +350,7 @@ void genMaze(int** maze, int mazeSize)
         stack.pop();
     }*/
 
-    crashWalls(maze, mazeSize);
+    //crashWalls(maze, mazeSize);
 }
 
 void crashWalls(int** maze, int mazeSize)

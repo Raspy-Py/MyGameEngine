@@ -30,7 +30,7 @@ private:
 
 	void moveForward(FPS&, Map&);
 	void moveBackward(FPS&, Map&);
-	void strafeRigth(FPS&, Map&);
+	void strafeRight(FPS&, Map&);
 	void strafeLeft(FPS&, Map&);
 	void turnLeft(FPS&);
 	void turnRight(FPS&);

@@ -87,7 +87,14 @@ void Map::loadMap(int nParam, const string path)
     playerDirPointer[1].color = Color(255, 0, 0);
 
     playerMarker.setRadius(minimapCellSize / 2);
-    playerMarker.setFillColor(Color(255, 204, 0));
+    playerMarker.setFillColor(Color(87, 166, 57));
+
+    CircleShape enemyMarker;
+    enemyMarker.setRadius(minimapCellSize / 2);
+    enemyMarker.setFillColor(Color(255, 204, 0));
+    enemyMarker.setOrigin(enemyMarker.getRadius(), enemyMarker.getRadius());
+
+    enemyMarkers.push_back(enemyMarker);
 
     for (int i = 0; i < levelSize; i++)
     {
@@ -141,9 +148,12 @@ void Map::draw(RenderWindow& window)
     window.draw(rays);
     window.draw(playerMarker);
     window.draw(playerDirPointer);
+
+    for (auto marker : enemyMarkers)
+        window.draw(marker);
 }
 
-void Map::updateMinimap(Player& player, float** raysEndCords)
+void Map::updateMinimap(Player& player, Monster& monster, float** raysEndCords)
 {
     ////////////////////////////////////////////////
     // Оновлюємо координати променів на мінікарті //
@@ -184,6 +194,18 @@ void Map::updateMinimap(Player& player, float** raysEndCords)
     yRayStart -= playerMarker.getRadius();
 
     playerMarker.setPosition(Vector2f(xRayStart, yRayStart));  
+
+    float enemyX;
+    float enemyY;
+
+    enemyX = monster.getMonstersList()[0]->getPosition().x - enemyMarkers[0].getRadius() * 2;
+    enemyY = monster.getMonstersList()[0]->getPosition().y - enemyMarkers[0].getRadius() * 2;
+
+    enemyX *= minimapToMapRelation;
+    enemyY *= minimapToMapRelation;
+
+    enemyMarkers[0].setPosition(enemyX, enemyY);
+
 }
 
 void Map::generateMap(int mazeSize, int nParam)
@@ -225,7 +247,14 @@ void Map::generateMap(int mazeSize, int nParam)
     playerDirPointer[1].color = Color(255, 0, 0);
 
     playerMarker.setRadius(minimapCellSize / 2);
-    playerMarker.setFillColor(Color(255, 204, 0));
+    playerMarker.setFillColor(Color(87, 166, 57));
+
+    CircleShape enemyMarker;
+    enemyMarker.setRadius(minimapCellSize / 2);
+    enemyMarker.setFillColor(Color(255, 204, 0));
+    enemyMarker.setOrigin(enemyMarker.getRadius(), enemyMarker.getRadius());
+
+    enemyMarkers.push_back(enemyMarker);
 
     for (int i = 0; i < levelSize; i++)
     {
@@ -270,6 +299,11 @@ void Map::generateMap(int mazeSize, int nParam)
     minimapBackground.setFillColor(Color(150, 150, 150));
     minimapBackground.setPosition(Vector2f(0, 0));
     minimapBackground.setSize(Vector2f(minimapSize, minimapSize));
+}
+
+void Map::clearInfo()
+{
+    enemyMarkers.clear();
 }
 
 int** Map::genEmptyField(int n)

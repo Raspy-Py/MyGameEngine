@@ -24,7 +24,7 @@ void Player::listenKeyboard(FPS& fps, Map& map)
     speed = PLAYER_DEFAULT_SPEED;
 
     if      (Keyboard::isKeyPressed(Keyboard::A)) { strafeLeft(fps, map); }
-    else if (Keyboard::isKeyPressed(Keyboard::D)) { strafeRigth(fps, map); }
+    else if (Keyboard::isKeyPressed(Keyboard::D)) { strafeRight(fps, map); }
     
     if      (Keyboard::isKeyPressed(Keyboard::W)) { moveForward(fps, map); } 
     else if (Keyboard::isKeyPressed(Keyboard::S)) { moveBackward(fps, map); } 
@@ -95,7 +95,7 @@ void Player::moveBackward(FPS& fps, Map& map)
     }
 }
 
-void Player::strafeRigth(FPS& fps, Map& map)
+void Player::strafeRight(FPS& fps, Map& map)
 {
     float newX = position.x + strafeSpeed * cos(direction + ANGLE_90) * fps.getFPS();
     float newY = position.y + strafeSpeed * sin(direction + ANGLE_90) * fps.getFPS();

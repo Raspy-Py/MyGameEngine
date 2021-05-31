@@ -9,28 +9,50 @@ Monster::Monster()
 
 Monster::~Monster()
 {
+    monstersList.clear();
 }
 
-void Monster::makeStep(FPS& fps, Map& map)
+void Monster::makeStep(FPS& fps, Map& map, Player& player)
 {
-    if (pathToPlayer.size()) {
+    if (pathToPlayer.size() && 
+        !distance(playerLastPosition , Vector2i(
+            (int)player.getPosition().x / map.cellSize, 
+            (int)player.getPosition().y / map.cellSize))) {
+
         if (isPointReached(map)) {
             pathToPlayer.erase(pathToPlayer.begin());
-            makeStep(fps, map);
         }
         else {
             float dx, dy;
             Vector2f node = {
-                pathToPlayer[0].x * map.cellSize + map.cellSize / 2,
-                pathToPlayer[0].y * map.cellSize + map.cellSize / 2
+                float(pathToPlayer[0].x * map.cellSize + map.cellSize / 2),
+                float(pathToPlayer[0].y * map.cellSize + map.cellSize / 2)
             };
 
-            dx = (node.x - position.x) / sqrt(sqrDistance(node, position));
-            dy = (node.y - position.y) / sqrt(sqrDistance(node, position));
+            dx = (node.x - position.x) / sqrt(sqrDistance(node, position)) * speed * fps.getFPS();
+            dy = (node.y - position.y) / sqrt(sqrDistance(node, position)) * speed * fps.getFPS();
 
             position.x += dx;
             position.y += dy;
         }
+    }
+    else {
+        Vector2i start;
+        Vector2i target;
+
+        start = {
+            (int)player.getPosition().x / map.cellSize,
+            (int)player.getPosition().y / map.cellSize
+        };
+        target = {
+            (int)position.x / map.cellSize,
+            (int)position.y / map.cellSize
+        };
+
+        playerLastPosition = start;
+        pathToPlayer = aStarPathFind(map.levelPlan, map.levelSize, start, target);
+
+        //makeStep(fps, map, player);
     }
 }
 
@@ -92,7 +114,7 @@ std::vector<Vector2i> Monster::aStarPathFind(int** maze, int mazeSize, const Vec
             graph[i][j].gridPos.x = j;
             graph[i][j].gridPos.y = i;
 
-            if (maze[j][i])
+            if (maze[i][j])
             {
                 graph[i][j].type = NodeType::WALL;
             }
@@ -163,6 +185,7 @@ std::vector<Vector2i> Monster::aStarPathFind(int** maze, int mazeSize, const Vec
         path.push_back(nextNode->gridPos);
     }
 
+    path.erase(path.begin());
 
     //---Чистимо пам'ять---//
     for (int i = 0; i < mazeSize; i++)
@@ -212,8 +235,8 @@ void Monster::removeFromOpenAndClose(Node* node, std::vector<Node*>& openNodes)
 bool Monster::isPointReached(Map& map)
 {
     Vector2f NodeCentre = {
-        pathToPlayer[0].x * map.cellSize + map.cellSize / 2,
-        pathToPlayer[0].y * map.cellSize + map.cellSize / 2
+        float(pathToPlayer[0].x * map.cellSize + map.cellSize / 2),
+        float(pathToPlayer[0].y * map.cellSize + map.cellSize / 2)
     };
 
     return speed * speed >= sqrDistance(NodeCentre, position);

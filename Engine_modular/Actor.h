@@ -9,12 +9,16 @@ public:
 	Actor();
 	~Actor();
 
+	void setHealth(float);
+	void setSpeed(float);
+	void setDirection(float);
+	void setDamage(float);
+	void setPosition(Vector2f);
 	float getHealth();
 	float getSpeed();
 	float getDirection();
 	float getDamage();
 	Vector2f getPosition();
-	void setPosition(Vector2f);
 
 protected:
 	float health;

@@ -8,6 +8,26 @@ Actor::~Actor()
 {
 }
 
+void Actor::setHealth(float _health)
+{
+	health = _health;
+}
+
+void Actor::setSpeed(float _speed)
+{
+	speed = _speed;
+}
+
+void Actor::setDirection(float _direction)
+{
+	direction = _direction;
+}
+
+void Actor::setDamage(float _damage)
+{
+	damage = _damage;
+}
+
 float Actor::getHealth()
 {
 	return health;
@@ -21,7 +41,7 @@ float Actor::getSpeed()
 float Actor::getDirection()
 {
 	return direction;
-}
+} 
 
 float Actor::getDamage()
 {

@@ -22,7 +22,7 @@ private:
 	VertexArray image;
 	RectangleShape floor;
 	RectangleShape ceiling;
-	std::vector<Color> textureColorMap; // Послідовно випасані пікселі текстури
+	std::vector<Color> textureColorMap; // Послідовно виписані пікселі текстури
 	Color** textureCols; // Текстура
 	Color** textureColsShaded; // Затемнена текстура
 
