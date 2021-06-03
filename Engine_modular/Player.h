@@ -18,7 +18,7 @@ public:
 	Player(float, float);
 	~Player();
 
-	virtual void listenKeyboard(FPS&, Map&);
+	void listenKeyboard(FPS&, Map&, float*, Vector2f);
 	void takeDamage(int);
 	void rotateByMouse(FPS&, int);
 

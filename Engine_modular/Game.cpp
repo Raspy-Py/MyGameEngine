@@ -85,6 +85,8 @@ void Game::startLevel()
     Vector2i centre(WIN_HALF_WIDTH, WIN_HALF_HEIGHT);
 
     RayCasting rc;
+    EntitySprite monsterStrite;
+    monsterStrite.loadSprite(PATH_MONSTER_IMAGE, MONSTER_SPRITE_RES);
 
     window.setMouseCursorVisible(false);
     Mouse::setPosition(centre, window);
@@ -100,7 +102,7 @@ void Game::startLevel()
     Player player(map.cellSize * 1.5, map.cellSize * 1.5);
     Monster monster_1;
 
-    monster_1.setPosition(Vector2f(map.cellSize * 1.5, map.cellSize * 1.5));
+    monster_1.setPosition(Vector2f(map.cellSize * 9.5, map.cellSize * 9.5));
     monster_1.setSpeed(2);
 
     while (window.isOpen() && runThis) {
@@ -131,10 +133,12 @@ void Game::startLevel()
         map.updateMinimap(player,monster_1, rc.raysEndCords);
         render.updateImage(rc);
         fps.updateFPS();
+        monsterStrite.calculateSprite(player, monster_1.getPosition());
 
         window.clear();
         render.draw(window);
         map.draw(window);
+        monsterStrite.draw(window, rc);
         fps.draw(window);
         window.draw(pointer);
         window.display();
@@ -147,6 +151,11 @@ void Game::startLevel()
 
 void Game::mainMenu()
 {
+    EntitySprite a;
+
+
+
+
     ///////////////////////////////////
     // testing Area
     ///////////////////////////////////

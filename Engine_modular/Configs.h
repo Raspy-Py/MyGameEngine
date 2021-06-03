@@ -7,6 +7,7 @@ const std::string PATH_MM_BACKGROUND = "../data/pictures/main_menu_background.jp
 const std::string PATH_WALL_TEXTURE = "../data/textures/beacon.bmp";
 const std::string PATH_DEFAULT_FONT = "../data/fonts/basic_font.ttf";
 const std::string PATH_TEMPLATES = "../data/levels_templates.csv";
+const std::string PATH_MONSTER_IMAGE = "../data/sprites/monster.bmp";
 
 ////////////////////////////////////////////////
 // Параметри вікна                            //
@@ -14,7 +15,7 @@ const std::string PATH_TEMPLATES = "../data/levels_templates.csv";
 const float FONT_AR = 0.735;
 const float AR = 9.0 / 16;
 const float WISHED_FPS = 60;
-const int WIN_WIDTH = 1000 + 1;
+const int WIN_WIDTH = 720 + 1;
 const int WIN_HEIGHT = (WIN_WIDTH -1 ) * AR;
 const int WIN_HALF_HEIGHT = WIN_HEIGHT / 2;
 const int WIN_HALF_WIDTH = (WIN_WIDTH-1) / 2;
@@ -36,12 +37,12 @@ const float POINTER_RADIUS = 3;
 ////////////////////////////////////////////////
 // Математичні константи                      //
 ////////////////////////////////////////////////
-const double PI = 3.141592653;
-const double ANGLE_0 = 0;
-const double ANGLE_90 = PI/2;
-const double ANGLE_180 = PI;
-const double ANGLE_270 = PI * 3 / 2;
-const double ANGLE_360 = PI * 2;
+const float PI = 3.141592653;
+const float ANGLE_0 = 0;
+const float ANGLE_90 = PI/2;
+const float ANGLE_180 = PI;
+const float ANGLE_270 = PI * 3 / 2;
+const float ANGLE_360 = PI * 2;
 
 ////////////////////////////////////////////////
 // Параметри лиття променів                   //
@@ -54,5 +55,6 @@ const float SHADING = 0.75;                     // Сила затемнення
 ////////////////////////////////////////////////
 // Параметри текстур                          //
 ////////////////////////////////////////////////
+const int MONSTER_SPRITE_RES = 32;              // Роздільна здатність зображення монстра
 const int TEXTURE_RES = 32;                     // Розмір текстури стіни
 const float WALL_HEIGHT = 32;                   // Висота стіни

@@ -156,7 +156,7 @@ void RayCasting::castRays(Player& player, Map& map)
 		if (hLen < vLen) {
 			raysEndCords[rNumber][0] = xh;
 			raysEndCords[rNumber][1] = yh;
-			raysLength[rNumber] = hLen * cos(player.getDirection() - ra);
+			raysLength[rNumber] = hLen* cos(player.getDirection() - ra);
 			raysPositionsOnWalls[rNumber] = (int)xh % TEXTURE_RES;
 			isWallHorizontal[rNumber] = true;
 		}

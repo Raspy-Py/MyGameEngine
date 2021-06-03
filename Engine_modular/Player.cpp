@@ -19,7 +19,7 @@ Player::~Player()
 {
 }
 
-void Player::listenKeyboard(FPS& fps, Map& map)
+void Player::listenKeyboard(FPS& fps, Map& map, float* raysLenth, Vector2f monsterPos)
 {
     speed = PLAYER_DEFAULT_SPEED;
 
@@ -28,6 +28,8 @@ void Player::listenKeyboard(FPS& fps, Map& map)
     
     if      (Keyboard::isKeyPressed(Keyboard::W)) { moveForward(fps, map); } 
     else if (Keyboard::isKeyPressed(Keyboard::S)) { moveBackward(fps, map); } 
+
+    if (Keyboard::isKeyPressed(Keyboard::Space) { shoot}
 
 
     if      (Keyboard::isKeyPressed(Keyboard::P)) { getInfo(); } // TODO: remove
