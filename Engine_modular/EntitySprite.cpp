@@ -15,7 +15,7 @@ void EntitySprite::draw(RenderWindow& window, RayCasting& rc)
 	if (shouldBeDisplayed)
 	for (int i = 0; i < actualSprite.size(); i++)
 	{
-		if (distToPlayer < rc.raysLength[i + leftSideColOnDisplay])
+		if (distToPlayer < rc.getRaysLength()[i + leftSideColOnDisplay])
 		{
 			window.draw(actualSprite[i]);
 		}

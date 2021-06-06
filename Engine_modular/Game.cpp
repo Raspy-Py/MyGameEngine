@@ -116,7 +116,7 @@ void Game::startLevel()
     pointer.setOutlineColor(Color(150,150,150));
 
     FPS fps;
-    Player player(map.levelSize, map.cellSize);
+    Player player(map.getLevelSize(), map.getCellSize());
     Monster monster_1;
 
     monster_1.respawn(map, player.getPosition(), monsterSprite);
@@ -146,14 +146,14 @@ void Game::startLevel()
         mouseDelta = mouseNewX - mouseOldX;
 
         if (Mouse::isButtonPressed(Mouse::Button::Left)) {
-            player.shoot(monster_1, rc.raysLength);
+            player.shoot(monster_1, rc.getRaysLength());
         }
 
         player.rotateByMouse(fps, mouseDelta);
-        player.listenKeyboard(fps, map, rc.raysLength, monster_1);
+        player.listenKeyboard(fps, map, rc.getRaysLength(), monster_1);
         monster_1.makeStep(fps, map, player);
         rc.castRays(player, map);
-        map.updateMinimap(player,monster_1, rc.raysEndCords);
+        map.updateMinimap(player,monster_1, rc.getRaysEndCords());
         render.updateImage(rc);
         monsterSprite.calculateSprite(player, monster_1.getPosition());
         monster_1.checkStatus(player, map, monsterSprite);
@@ -170,7 +170,7 @@ void Game::startLevel()
             render.deleteTexture();
         }
 
-        monstersLeftText.setString(to_string(monster_1.monsterLeft) +
+        monstersLeftText.setString(to_string(monster_1.getMonstersLeft()) +
             "/" + to_string(NUMBER_OF_MONSTERS));
         monstersLeftText.setPosition(float(WIN_WIDTH * 31) / 32 -
             (float)monstersLeftText.getString().getSize() * 0.83 * monstersLeftText.getCharacterSize(),
@@ -492,6 +492,9 @@ void Game::levelChooseMenu()
 
 void Game::endgameMenu()
 {
+    Clock time;
+    Time elapsed;
+    time.restart();
 
     bool runThis = true;
 
@@ -534,13 +537,18 @@ void Game::endgameMenu()
 
 
         if (restartButton.isPressed(window)) {
-            runThis = false;
-            toDisplay = START_LEVEL;
+            elapsed = time.getElapsedTime();
+            if (elapsed.asMilliseconds() > 500) {
+                runThis = false;
+                toDisplay = START_LEVEL;
+            }
         }
         else if (mainMenuButton.isPressed(window)) {
-            background.setColor(Color(255, 255, 255, 255));
-            runThis = false;
-            toDisplay = MAIN_MENU;
+            elapsed = time.getElapsedTime();
+            if (elapsed.asMilliseconds() > 500) {
+                runThis = false;
+                toDisplay = MAIN_MENU;
+            }
         }
 
         
@@ -571,7 +579,8 @@ Color& Game::stringToColor(std::string str)
 bool Game::checkGameStatus(Player& player, Monster& monster) {
     if (player.getHealth() <= 0) {
         gameResultText.setCharacterSize(40);
-        gameResultText.setString("You loose!");
+        gameResultText.setString("Wasted");
+        gameResultText.setFillColor(Color(255,40,40));
         gameResultText.setPosition(
             (float)WIN_HALF_WIDTH - (float)gameResultText.getString().getSize() * FONT_AR * gameResultText.getCharacterSize() / 2,
             float(WIN_HEIGHT) / 3);
@@ -580,9 +589,10 @@ bool Game::checkGameStatus(Player& player, Monster& monster) {
         background.setColor(Color(255, 255, 255, 84));
         return false;
     }
-    else if (monster.monsterLeft <= 0) {
+    else if (monster.getMonstersLeft() <= 0) {
         gameResultText.setCharacterSize(40);
-        gameResultText.setString("You win!");
+        gameResultText.setString("Mission passed!");
+        gameResultText.setFillColor(Color(40,255,40));
         gameResultText.setPosition(
             (float)WIN_HALF_WIDTH - (float)gameResultText.getString().getSize() * FONT_AR * gameResultText.getCharacterSize() / 2,
             float(WIN_HEIGHT) / 3);

@@ -103,9 +103,9 @@ void RenderImage::updateImage(RayCasting & rc)
 
 	for (int col = 0; col < WIN_WIDTH; col++)
 	{
-		texCol = rc.raysPositionsOnWalls[col];
+		texCol = rc.getRaysPositionsOnWalls()[col];
 
-		wallColSize = (WALL_HEIGHT * WTP / 2) / rc.raysLength[col];
+		wallColSize = (WALL_HEIGHT * WTP / 2) / rc.getRaysLength()[col];
 		pixelSize = wallColSize / TEXTURE_RES  * 2;
 		wallColTop = WIN_HALF_HEIGHT - wallColSize;
 
@@ -114,7 +114,7 @@ void RenderImage::updateImage(RayCasting & rc)
 			//---Зафарбовуємо стовпець стіни---//
 			lineIndex = (col * TEXTURE_RES + pixel) << 1;
 			
-			if (rc.isWallHorizontal[col])
+			if (rc.checkWallHorizontal()[col])
 			{
 				image[lineIndex].color = textureColsShaded[texCol][pixel];
 				image[lineIndex + 1].color = textureColsShaded[texCol][pixel];

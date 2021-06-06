@@ -46,6 +46,7 @@ void RayCasting::castRays(Player& player, Map& map)
 	// а також точки на стінах для тесктуризації  //
 	////////////////////////////////////////////////
 
+	
 
 	float x0 = player.getPosition().x; // Координата гравця
 	float y0 = player.getPosition().y; // Координата гравця
@@ -57,9 +58,10 @@ void RayCasting::castRays(Player& player, Map& map)
 	float hLen, vLen;             // Довжини променів
 	int xh, yh, xv, yv;           // Кординати кінців променів
 	int iter = 1;                 // Номер ітерації лиття промення
-	int quadSize = map.cellSize;  // Розмір однієї клітинки 
-	int mapSize = map.levelSize;  // Розмір рівня в клітинках
+	int quadSize = map.getCellSize();  // Розмір однієї клітинки 
+	int mapSize = map.getLevelSize();  // Розмір рівня в клітинках
 	int worldSize = mapSize * quadSize - 1; // Розмір рівня 
+	int** levelPlan = map.getLevelPlan(); // Покажчик на сіхему рівня
 
 	for (int rNumber = 0; rNumber < WIN_WIDTH; rNumber++, rau+=ABR)
 	{
@@ -89,7 +91,7 @@ void RayCasting::castRays(Player& player, Map& map)
 		// Перевіряємо чи не виходить промінь за межі рівня
 		// та чи натраплює на стіну
 		if (xa >= worldSize || ya >= worldSize || xa < 0 || ya < 0) iter = mapSize;
-		else if (map.levelPlan[int(ya) / quadSize][int(xa) / quadSize]) iter = mapSize;
+		else if (levelPlan[int(ya) / quadSize][int(xa) / quadSize]) iter = mapSize;
 		else iter = 1;
 
 		while (iter < mapSize)
@@ -100,7 +102,7 @@ void RayCasting::castRays(Player& player, Map& map)
 			ya += dy;
 
 			if (xa >= worldSize || ya >= worldSize || xa < 0 || ya < 0) break;
-			if (map.levelPlan[int(ya) / quadSize][int(xa) / quadSize] ) break;
+			if (levelPlan[int(ya) / quadSize][int(xa) / quadSize] ) break;
 		}
 		xv = xa; yv = ya; // Збергіаємо координати кінця променя
 
@@ -128,7 +130,7 @@ void RayCasting::castRays(Player& player, Map& map)
 		// Перевіряємо чи не виходить промінь за межі рівня
 		// та чи натраплює на стіну
 		if (xa >= worldSize || ya >= worldSize || xa < 0 || ya < 0) iter = mapSize;
-		else if (map.levelPlan[(int)ya / quadSize][(int)xa / quadSize]) iter = mapSize;
+		else if (levelPlan[(int)ya / quadSize][(int)xa / quadSize]) iter = mapSize;
 		else iter = 1;
 
 		while (iter < mapSize)
@@ -139,7 +141,7 @@ void RayCasting::castRays(Player& player, Map& map)
 			ya += dy;
 
 			if (xa >= worldSize || ya >= worldSize || xa < 0 || ya < 0) break;
-			if (map.levelPlan[(int)ya / quadSize][(int)xa / quadSize]) break;
+			if (levelPlan[(int)ya / quadSize][(int)xa / quadSize]) break;
 		}
 		xh = xa; yh = ya; // Збергіаємо координати кінця променя
 
@@ -169,6 +171,26 @@ void RayCasting::castRays(Player& player, Map& map)
 			isWallHorizontal[rNumber] = false;
 		}
 	}
+}
+
+int* RayCasting::getRaysPositionsOnWalls()
+{
+	return raysPositionsOnWalls;
+}
+
+bool* RayCasting::checkWallHorizontal()
+{
+	return isWallHorizontal;
+}
+
+float* RayCasting::getRaysLength()
+{
+	return raysLength;
+}
+
+float** RayCasting::getRaysEndCords()
+{
+	return raysEndCords;
 }
 
 float RayCasting::normalizeAngle(float a)

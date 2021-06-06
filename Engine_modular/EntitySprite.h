@@ -15,19 +15,25 @@ public:
 	EntitySprite();
 	~EntitySprite();
 
+	// Відображує спрайт на екрані
 	void draw(RenderWindow&, RayCasting&);
+	// Завантажує спрайт з файла
 	void loadSprite(std::string, int);
+	// Маштабує спрайт
 	void calculateSprite(Player&, Vector2f);
 private:
-	Color** spriteTex;
-	std::vector<VertexArray> actualSprite;
-	double distToPlayer;
-	bool shouldBeDisplayed;
-	int spriteLeftFirstCol;
-	int leftSideColOnDisplay;
+	Color** spriteTex; // Послідовність пікселів текстури
+	std::vector<VertexArray> actualSprite; // Маштабований спрайт
+	double distToPlayer; // Відстань до гравця
+	bool shouldBeDisplayed; // Прапорець, що показує, чи треба відображати спрайт
+	int spriteLeftFirstCol; // Абсциса спрайта
+	int leftSideColOnDisplay; // Абсциса спрайта на екрані
 
+	// Повертає кут напрямку вектора
 	double vectorToAngle(Vector2f);
+	// Перевіряє, чи знаходить об'єкт в полі зору
 	bool isInFieldOfView(float, Vector2f);
+	// Переведення з 16-ї системи в 10-у
 	unsigned hexToDec(char);
 };
 

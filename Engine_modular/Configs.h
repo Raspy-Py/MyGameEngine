@@ -20,7 +20,7 @@ const int WIN_WIDTH = 1000 + 1;
 const int WIN_HEIGHT = (WIN_WIDTH -1 ) * AR;
 const int WIN_HALF_HEIGHT = WIN_HEIGHT / 2;
 const int WIN_HALF_WIDTH = (WIN_WIDTH-1) / 2;
-const int MINIMAP_SIZE = WIN_HEIGHT / 3;
+const int MINIMAP_SIZE = WIN_HEIGHT / 2.5;
 const int MIN_ELAPSED = 200;
 
 ////////////////////////////////////////////////

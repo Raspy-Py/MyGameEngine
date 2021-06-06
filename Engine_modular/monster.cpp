@@ -17,8 +17,8 @@ void Monster::makeStep(FPS& fps, Map& map, Player& player)
 {
     if (pathToPlayer.size() && 
         !distance(playerLastPosition , Vector2i(
-            (int)player.getPosition().x / map.cellSize, 
-            (int)player.getPosition().y / map.cellSize))) {
+            (int)player.getPosition().x / map.getCellSize(), 
+            (int)player.getPosition().y / map.getCellSize()))) {
 
         if (isPointReached(map)) {
             pathToPlayer.erase(pathToPlayer.begin());
@@ -26,8 +26,8 @@ void Monster::makeStep(FPS& fps, Map& map, Player& player)
         else {
             float dx, dy;
             Vector2f node = {
-                float(pathToPlayer[0].x * map.cellSize + map.cellSize / 2),
-                float(pathToPlayer[0].y * map.cellSize + map.cellSize / 2)
+                float(pathToPlayer[0].x * map.getCellSize() + map.getCellSize() / 2),
+                float(pathToPlayer[0].y * map.getCellSize() + map.getCellSize() / 2)
             };
 
             dx = (node.x - position.x) / sqrt(sqrDistance(node, position)) * speed * fps.getFPS();
@@ -42,16 +42,16 @@ void Monster::makeStep(FPS& fps, Map& map, Player& player)
         Vector2i target;
 
         start = {
-            (int)player.getPosition().x / map.cellSize,
-            (int)player.getPosition().y / map.cellSize
+            (int)player.getPosition().x / map.getCellSize(),
+            (int)player.getPosition().y / map.getCellSize()
         };
         target = {
-            (int)position.x / map.cellSize,
-            (int)position.y / map.cellSize
+            (int)position.x / map.getCellSize(),
+            (int)position.y / map.getCellSize()
         };
 
         playerLastPosition = start;
-        pathToPlayer = aStarPathFind(map.levelPlan, map.levelSize, start, target);
+        pathToPlayer = aStarPathFind(map.getLevelPlan(), map.getLevelSize(), start, target);
 
         makeStep(fps, map, player);
     }
@@ -220,7 +220,7 @@ void Monster::removeFromOpenAndClose(Node* node, std::vector<Node*>& openNodes)
 
 void Monster::respawn(Map& map, const Vector2f& plPos, EntitySprite& sprite)
 {
-    float minDistToPlayer = float(map.cellSize / 3) * map.levelSize;
+    float minDistToPlayer = float(map.getCellSize() / 3) * map.getLevelSize();
     int i, j;
     Vector2f newPos;
     pathToPlayer.clear();
@@ -240,15 +240,15 @@ void Monster::respawn(Map& map, const Vector2f& plPos, EntitySprite& sprite)
     }
 
     while (true) {
-        i = rand() % map.levelSize;
-        j = rand() % map.levelSize;
+        i = rand() % map.getLevelSize();
+        j = rand() % map.getLevelSize();
 
         newPos = {
-            float(j + 0.5) * map.cellSize,
-            float(i + 0.5) * map.cellSize
+            float(j + 0.5) * map.getCellSize(),
+            float(i + 0.5) * map.getCellSize()
         };
 
-        if (!map.levelPlan[i][j] &&
+        if (!map.getLevelPlan()[i][j] &&
             sqrt(sqrDistance(newPos, plPos)) >
             minDistToPlayer) {
             position = newPos;
@@ -257,11 +257,16 @@ void Monster::respawn(Map& map, const Vector2f& plPos, EntitySprite& sprite)
     }
 }
 
+int Monster::getMonstersLeft()
+{
+    return monsterLeft;
+}
+
 bool Monster::isPointReached(Map& map)
 {
     Vector2f NodeCentre = {
-        float(pathToPlayer[0].x * map.cellSize + map.cellSize / 2),
-        float(pathToPlayer[0].y * map.cellSize + map.cellSize / 2)
+        float(pathToPlayer[0].x * map.getCellSize() + map.getCellSize() / 2),
+        float(pathToPlayer[0].y * map.getCellSize() + map.getCellSize() / 2)
     };
 
     return speed * speed >= sqrDistance(NodeCentre, position);

@@ -86,11 +86,11 @@ void Map::loadMap(int nParam, const string path)
     playerDirPointer[0].color = Color(255, 0, 0);
     playerDirPointer[1].color = Color(255, 0, 0);
 
-    playerMarker.setRadius(minimapCellSize / 2);
+    playerMarker.setRadius(minimapCellSize);
     playerMarker.setFillColor(Color(87, 166, 57));
 
     CircleShape enemyMarker;
-    enemyMarker.setRadius(minimapCellSize / 2);
+    enemyMarker.setRadius(minimapCellSize);
     enemyMarker.setFillColor(Color(218, 112, 214));
     enemyMarker.setOrigin(enemyMarker.getRadius(), enemyMarker.getRadius());
 
@@ -304,6 +304,21 @@ void Map::generateMap(int mazeSize, int nParam)
 void Map::clearInfo()
 {
     enemyMarkers.clear();
+}
+
+int** Map::getLevelPlan()
+{
+    return levelPlan;
+}
+
+int Map::getLevelSize()
+{
+    return levelSize;
+}
+
+int Map::getCellSize()
+{
+    return cellSize;
 }
 
 int** Map::genEmptyField(int n)

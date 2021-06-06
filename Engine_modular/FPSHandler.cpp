@@ -46,7 +46,7 @@ void FPS::updateFPS()
 	if (update.asMilliseconds() > 200)
 	{
 	stringFPS.setString(stringFPSPrefix + std::to_string(int(actualFPS)));
-	stringFPSSize = (stringFPSPrefix.size() + stringFPS.getString().getSize()) * stringFPS.getCharacterSize() * 0.85 + 2;
+	stringFPSSize = (stringFPSPrefix.size() + stringFPS.getString().getSize()) * stringFPS.getCharacterSize() * 0.85 + 2 + float(WIN_WIDTH)/32;
 	stringFPS.setPosition(Vector2f(WIN_WIDTH - stringFPSSize, 0));
 
 	timeFromUpdate.restart();

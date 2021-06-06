@@ -64,8 +64,8 @@ void Player::moveForward(FPS& fps, Map& map)
     float newX = position.x + speed * cos(direction) * fps.getFPS() * boost;
     float newY = position.y + speed * sin(direction) * fps.getFPS() * boost;
 
-    int oldQuadX = int(position.x) / map.cellSize;
-    int oldQuadY = int(position.y) / map.cellSize;
+    int oldQuadX = int(position.x) / map.getCellSize();
+    int oldQuadY = int(position.y) / map.getCellSize();
 
     if (!isWallColided(newX, newY, map))
     {
@@ -87,8 +87,8 @@ void Player::moveBackward(FPS& fps, Map& map)
     float newX = position.x - speed * cos(direction) * fps.getFPS();
     float newY = position.y - speed * sin(direction) * fps.getFPS();
 
-    int oldQuadX = int(position.x) / map.cellSize;
-    int oldQuadY = int(position.y) / map.cellSize;
+    int oldQuadX = int(position.x) / map.getCellSize();
+    int oldQuadY = int(position.y) / map.getCellSize();
 
     if (!isWallColided(newX, newY, map))
     {
@@ -110,8 +110,8 @@ void Player::strafeRight(FPS& fps, Map& map)
     float newX = position.x + strafeSpeed * cos(direction + ANGLE_90) * fps.getFPS();
     float newY = position.y + strafeSpeed * sin(direction + ANGLE_90) * fps.getFPS();
 
-    int oldQuadX = int(position.x) / map.cellSize;
-    int oldQuadY = int(position.y) / map.cellSize;
+    int oldQuadX = int(position.x) / map.getCellSize();
+    int oldQuadY = int(position.y) / map.getCellSize();
 
     if (!isWallColided(newX, newY, map))
     {
@@ -135,8 +135,8 @@ void Player::strafeLeft(FPS& fps, Map& map)
     float newX = position.x + strafeSpeed * cos(direction - ANGLE_90) * fps.getFPS();
     float newY = position.y + strafeSpeed * sin(direction - ANGLE_90) * fps.getFPS();
 
-    int oldQuadX = int(position.x) / map.cellSize;
-    int oldQuadY = int(position.y) / map.cellSize;
+    int oldQuadX = int(position.x) / map.getCellSize();
+    int oldQuadY = int(position.y) / map.getCellSize();
 
     if (!isWallColided(newX, newY, map))
     {
@@ -210,18 +210,18 @@ bool Player::isWallColided(float plX, float plY, Map& map)
     int i0, i1;
     int j0, j1;
 
-    j0 = int(plX - colBoxSize) / map.cellSize;
-    j1 = int(plX + colBoxSize) / map.cellSize;
-    i0 = int(plY - colBoxSize) / map.cellSize;
-    i1 = int(plY + colBoxSize) / map.cellSize;
+    j0 = int(plX - colBoxSize) / map.getCellSize();
+    j1 = int(plX + colBoxSize) / map.getCellSize();
+    i0 = int(plY - colBoxSize) / map.getCellSize();
+    i1 = int(plY + colBoxSize) / map.getCellSize();
 
-    if (map.levelPlan[i0][j0])
+    if (map.getLevelPlan()[i0][j0])
         return true;
-    else if (map.levelPlan[i0][j1])
+    else if (map.getLevelPlan()[i0][j1])
         return true;
-    else if (map.levelPlan[i1][j0])
+    else if (map.getLevelPlan()[i1][j0])
         return true;
-    else if (map.levelPlan[i1][j1])
+    else if (map.getLevelPlan()[i1][j1])
         return true;
 
     return false;

@@ -11,9 +11,6 @@ Button::Button(Vector2f position, Vector2f size, Color color)
 
 	text.setPosition(Vector2f(position.x + 10, position.y));
 
-	////////////////////////////////////////////////
-	// 	   Ініціалізуємо відтінки
-	////////////////////////////////////////////////
 	hoverColor.r = norm(color.r + 20);
 	hoverColor.g = norm(color.g + 20);
 	hoverColor.b = norm(color.b + 20);
