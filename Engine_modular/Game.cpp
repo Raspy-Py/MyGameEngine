@@ -28,6 +28,20 @@ Game::Game()
     namePreview.setCharacterSize(60);
     namePreview.setFont(menuFont);
     namePreview.setFillColor(Color(255,255,255));
+
+    playerHealthIndicator.resize(8);
+    playerHealthIndicator.setPrimitiveType(Quads);
+
+    playerHealthIndicator[0].position = Vector2f(float(WIN_WIDTH * 3) / 4, float(WIN_HEIGHT) / 18);
+    playerHealthIndicator[5].position = Vector2f(float(WIN_WIDTH * 31) / 32, float(WIN_HEIGHT) / 18);
+    playerHealthIndicator[3].position = Vector2f(float(WIN_WIDTH * 3) / 4, float(WIN_HEIGHT) / 9);
+    playerHealthIndicator[6].position = Vector2f(float(WIN_WIDTH * 31) / 32, float(WIN_HEIGHT) / 9);
+
+    for (int i = 0; i < 4; i++)
+        playerHealthIndicator[i].color = Color(255, 50, 50);
+
+    for (int i = 4; i < 8; i++)
+        playerHealthIndicator[i].color = Color(102, 20, 20);
 }
 
 Game::~Game()
@@ -41,7 +55,7 @@ void Game::runGame()
 
      // Створюємо вікно
      window.create(VideoMode(WIN_WIDTH - 1, WIN_HEIGHT), "RayCastingGameEngine", Style::Titlebar | Style::Close, settings);
-     window.setVerticalSyncEnabled(true);
+     //window.setVerticalSyncEnabled(true);
 
 
     while (window.isOpen()) {
@@ -66,6 +80,9 @@ void Game::runGame()
         case Game::START_LEVEL:
             startLevel();
             break;
+        case Game::END_GAME:
+            endgameMenu();
+            break;
         default:
             std::cout << "Wrong displaying mode chosen: " << toDisplay << std::endl;
             std::cout << "Switched to MAIN_MENU (0)" << std::endl;
@@ -85,8 +102,8 @@ void Game::startLevel()
     Vector2i centre(WIN_HALF_WIDTH, WIN_HALF_HEIGHT);
 
     RayCasting rc;
-    EntitySprite monsterStrite;
-    monsterStrite.loadSprite(PATH_MONSTER_IMAGE, MONSTER_SPRITE_RES);
+    EntitySprite monsterSprite;
+    monsterSprite.loadSprite(PATH_WEAK_MONSTER, MONSTER_SPRITE_RES);
 
     window.setMouseCursorVisible(false);
     Mouse::setPosition(centre, window);
@@ -99,11 +116,19 @@ void Game::startLevel()
     pointer.setOutlineColor(Color(150,150,150));
 
     FPS fps;
-    Player player(map.cellSize * 1.5, map.cellSize * 1.5);
+    Player player(map.levelSize, map.cellSize);
     Monster monster_1;
 
-    monster_1.setPosition(Vector2f(map.cellSize * 9.5, map.cellSize * 9.5));
-    monster_1.setSpeed(2);
+    monster_1.respawn(map, player.getPosition(), monsterSprite);
+
+    Text monstersLeftText;
+    monstersLeftText.setFont(menuFont);
+    monstersLeftText.setString(to_string(NUMBER_OF_MONSTERS) +
+    "/" + to_string(NUMBER_OF_MONSTERS));
+    monstersLeftText.setCharacterSize(20);
+    monstersLeftText.setPosition(float(WIN_WIDTH * 31)/32 - 
+        (float)monstersLeftText.getString().getSize() * 0.83 * monstersLeftText.getCharacterSize(),
+        float(WIN_HEIGHT)/9 + 4);
 
     while (window.isOpen() && runThis) {
 
@@ -113,6 +138,30 @@ void Game::startLevel()
             if (event.type == Event::Closed)
                 window.close();
 
+        
+
+        ////---Обробка керування мишею---//
+        mouseNewX = Mouse::getPosition(window).x;
+        Mouse::setPosition(centre, window);
+        mouseDelta = mouseNewX - mouseOldX;
+
+        if (Mouse::isButtonPressed(Mouse::Button::Left)) {
+            player.shoot(monster_1, rc.raysLength);
+        }
+
+        player.rotateByMouse(fps, mouseDelta);
+        player.listenKeyboard(fps, map, rc.raysLength, monster_1);
+        monster_1.makeStep(fps, map, player);
+        rc.castRays(player, map);
+        map.updateMinimap(player,monster_1, rc.raysEndCords);
+        render.updateImage(rc);
+        monsterSprite.calculateSprite(player, monster_1.getPosition());
+        monster_1.checkStatus(player, map, monsterSprite);
+        updateIndicator(player.getHealth());
+        fps.updateFPS();
+
+        runThis = checkGameStatus(player, monster_1);
+
         if (Keyboard::isKeyPressed(Keyboard::Escape)) {
             background.setColor(Color(255, 255, 255, 255));
             runThis = false;
@@ -121,44 +170,34 @@ void Game::startLevel()
             render.deleteTexture();
         }
 
-        ////---Обробка курування мишею---//
-        mouseNewX = Mouse::getPosition(window).x;
-        Mouse::setPosition(centre, window);
-        mouseDelta = mouseNewX - mouseOldX;
-
-        player.rotateByMouse(fps, mouseDelta);
-        player.listenKeyboard(fps, map);
-        monster_1.makeStep(fps, map, player);
-        rc.castRays(player, map);
-        map.updateMinimap(player,monster_1, rc.raysEndCords);
-        render.updateImage(rc);
-        fps.updateFPS();
-        monsterStrite.calculateSprite(player, monster_1.getPosition());
+        monstersLeftText.setString(to_string(monster_1.monsterLeft) +
+            "/" + to_string(NUMBER_OF_MONSTERS));
+        monstersLeftText.setPosition(float(WIN_WIDTH * 31) / 32 -
+            (float)monstersLeftText.getString().getSize() * 0.83 * monstersLeftText.getCharacterSize(),
+            float(WIN_HEIGHT) / 9 + 4);
 
         window.clear();
         render.draw(window);
+        monsterSprite.draw(window, rc);
         map.draw(window);
-        monsterStrite.draw(window, rc);
-        fps.draw(window);
         window.draw(pointer);
+        window.draw(playerHealthIndicator);
+        window.draw(monstersLeftText);
+        fps.draw(window);
         window.display();
     }
 
-    map.clearInfo();
 
     window.setMouseCursorVisible(true);
 }
 
 void Game::mainMenu()
 {
-    EntitySprite a;
+    Clock time;
+    Time elapsed;
+    time.restart();
 
-
-
-
-    ///////////////////////////////////
-    // testing Area
-    ///////////////////////////////////
+    map.clearInfo();
 
     bool runThis = true;
 
@@ -201,15 +240,22 @@ void Game::mainMenu()
                 window.close();
         
 
-        if (loadLevelButton.isPressed(window)) {
-            background.setColor(Color(255, 255, 255, 84));
-            runThis = false;
-            toDisplay = LEVEL_CHOOSE_MENU;
-        }else if(createLevelButton.isPressed(window)) {
-            background.setColor(Color(255,255,255,84));
-            runThis = false;
-            toDisplay = LEVEL_CREATION_MENU;
-        }
+       
+            if (loadLevelButton.isPressed(window)) {
+                background.setColor(Color(255, 255, 255, 84));
+                runThis = false;
+                toDisplay = LEVEL_CHOOSE_MENU;
+            }
+            else if (createLevelButton.isPressed(window)) {
+                elapsed = time.getElapsedTime();
+                if (elapsed.asMilliseconds() > 200) {
+                    background.setColor(Color(255, 255, 255, 84));
+                    runThis = false;
+                    toDisplay = LEVEL_CREATION_MENU;
+                    time.restart();
+                }
+
+            }
 
         fps.updateFPS();
 
@@ -444,6 +490,73 @@ void Game::levelChooseMenu()
     }
 }
 
+void Game::endgameMenu()
+{
+
+    bool runThis = true;
+
+    FPS fps;
+
+    gameResultText.setFont(menuFont);
+
+    Button restartButton(Vector2f(WIN_HALF_WIDTH - 135, WIN_HALF_HEIGHT + 50), Vector2f(270, 40), Color(255, 255, 255, 0));
+    restartButton.setTextString("Restart");
+    restartButton.setTextColor(Color(255, 255, 255));
+    restartButton.setTextFont(menuFont);
+    restartButton.setTextPosition(Vector2f(WIN_HALF_WIDTH - 105, WIN_HALF_HEIGHT + 50));
+    restartButton.alignTextCentre(FONT_AR);
+
+    Button mainMenuButton(Vector2f(WIN_HALF_WIDTH - 135, WIN_HALF_HEIGHT - 10), Vector2f(270, 40), Color(255, 255, 255, 0));
+    mainMenuButton.setTextString("Main menu");
+    mainMenuButton.setTextColor(Color(255, 255, 255));
+    mainMenuButton.setTextFont(menuFont);
+    mainMenuButton.alignTextCentre(FONT_AR);
+
+
+    if (!backgroundTexture.loadFromFile(PATH_MM_BACKGROUND))
+        std::cout << "Failed to load background for main menu! " << std::endl;
+    background.setTexture(backgroundTexture);
+    background.setPosition(Vector2f(0, 0));
+
+    //---Масштабуємо спрайт фону в меню---///
+    Vector2f targetSize(WIN_WIDTH, WIN_HEIGHT);
+    background.setScale(
+        targetSize.x / background.getLocalBounds().width,
+        targetSize.y / background.getLocalBounds().height);
+
+    while (window.isOpen() && runThis) {
+
+        // Обробка подій
+        Event event;
+        while (window.pollEvent(event))
+            if (event.type == Event::Closed)
+                window.close();
+
+
+        if (restartButton.isPressed(window)) {
+            runThis = false;
+            toDisplay = START_LEVEL;
+        }
+        else if (mainMenuButton.isPressed(window)) {
+            background.setColor(Color(255, 255, 255, 255));
+            runThis = false;
+            toDisplay = MAIN_MENU;
+        }
+
+        
+
+        fps.updateFPS();
+
+        window.clear();
+        window.draw(background);
+        fps.draw(window);
+        window.draw(gameResultText);
+        restartButton.draw(window);
+        mainMenuButton.draw(window);
+        window.display();
+    }
+}
+
 Color& Game::stringToColor(std::string str)
 {
     Color rgbColor;
@@ -453,6 +566,33 @@ Color& Game::stringToColor(std::string str)
     rgbColor.b = stoi(str.substr(4, 2).c_str(), 0, 16);
 
     return rgbColor;
+}
+
+bool Game::checkGameStatus(Player& player, Monster& monster) {
+    if (player.getHealth() <= 0) {
+        gameResultText.setCharacterSize(40);
+        gameResultText.setString("You loose!");
+        gameResultText.setPosition(
+            (float)WIN_HALF_WIDTH - (float)gameResultText.getString().getSize() * FONT_AR * gameResultText.getCharacterSize() / 2,
+            float(WIN_HEIGHT) / 3);
+
+        toDisplay = END_GAME;
+        background.setColor(Color(255, 255, 255, 84));
+        return false;
+    }
+    else if (monster.monsterLeft <= 0) {
+        gameResultText.setCharacterSize(40);
+        gameResultText.setString("You win!");
+        gameResultText.setPosition(
+            (float)WIN_HALF_WIDTH - (float)gameResultText.getString().getSize() * FONT_AR * gameResultText.getCharacterSize() / 2,
+            float(WIN_HEIGHT) / 3);
+
+        toDisplay = END_GAME;
+        background.setColor(Color(255, 255, 255, 84));
+        return false;
+    }
+
+    return true;
 }
 
 void Game::loadTemplates()
@@ -609,4 +749,12 @@ void Game::switchTemplate(int tempIndex)
 
     floorPreview.setFillColor(floorColor[tempIndex]);
     ceilingPreview.setFillColor(ceilingColor[tempIndex]);
+}
+
+void Game::updateIndicator(float hp)
+{
+    playerHealthIndicator[1].position = Vector2f(float(2400.0  + hp * 7) * WIN_WIDTH / 3200, float(WIN_HEIGHT) / 18);
+    playerHealthIndicator[4].position = Vector2f(float(2400.0  + hp * 7) * WIN_WIDTH / 3200, float(WIN_HEIGHT) / 18);
+    playerHealthIndicator[2].position = Vector2f(float(2400.0  + hp * 7) * WIN_WIDTH / 3200, float(WIN_HEIGHT) / 9);
+    playerHealthIndicator[7].position = Vector2f(float(2400.0  + hp * 7) * WIN_WIDTH / 3200, float(WIN_HEIGHT) / 9);
 }

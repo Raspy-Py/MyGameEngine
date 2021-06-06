@@ -5,7 +5,9 @@
 #include "RayCasting.h"
 #include "Player.h"
 
-using namespace sf;
+class RayCasting;
+class Player;
+class Map;
 
 class EntitySprite
 {

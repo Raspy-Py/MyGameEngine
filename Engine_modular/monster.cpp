@@ -1,15 +1,16 @@
 #include "Monster.h"
+#include <time.h>
 
-std::vector<Monster*> Monster::monstersList = {};
+int Monster::monsterLeft = 0;
 
 Monster::Monster()
 {
-	monstersList.push_back(this);
+    monsterLeft = NUMBER_OF_MONSTERS;
 }
 
 Monster::~Monster()
 {
-    monstersList.clear();
+    monsterLeft = 0;
 }
 
 void Monster::makeStep(FPS& fps, Map& map, Player& player)
@@ -52,41 +53,27 @@ void Monster::makeStep(FPS& fps, Map& map, Player& player)
         playerLastPosition = start;
         pathToPlayer = aStarPathFind(map.levelPlan, map.levelSize, start, target);
 
-        //makeStep(fps, map, player);
+        makeStep(fps, map, player);
     }
 }
 
-std::vector<Monster*>& Monster::getMonstersList()
-{
-	return monstersList;
-}
+void Monster::checkStatus(Player& player, Map& map, EntitySprite& sprite) {
+    if (!monsterLeft)
+    {
+        return;
+    }
+    
+    if (health > 0) {
 
-void Monster::painterSort(const Vector2f& playerPos)
-{
-	Monster* tempPtr;
-	float tempDist;
-	std::vector<float> sqrDistList;
-
-	for (auto monster : monstersList)
-		sqrDistList.push_back(sqrDistance(playerPos, monster->position));
-
-
-	for (int i = 0; i < sqrDistList.size(); i++)
-	{
-		for (int j = 1; j < sqrDistList.size()- i; j++)
-		{
-			if (sqrDistList[j] > sqrDistList[j - 1])
-			{
-				tempDist = sqrDistList[j];
-				sqrDistList[j] = sqrDistList[j - 1];
-				sqrDistList[j - 1] = tempDist;
-
-				tempPtr = monstersList[j];
-				monstersList[j] = monstersList[j - 1];
-				monstersList[j - 1] = tempPtr;
-			}
-		}
-	}
+        if (sqrt(sqrDistance(position, player.getPosition())) <
+            MONSTER_ATACK_DISTANCE) {
+            player.setHealth(player.getHealth() - damage);
+         }
+    }
+    else {
+        monsterLeft--;
+        respawn(map, player.getPosition(), sprite);
+    }
 }
 
 float Monster::sqrDistance(const Vector2f& a,const Vector2f& b)
@@ -96,9 +83,9 @@ float Monster::sqrDistance(const Vector2f& a,const Vector2f& b)
 
 std::vector<Vector2i> Monster::aStarPathFind(int** maze, int mazeSize, const Vector2i& start, const Vector2i& target)
 {
-    std::vector<Vector2i> path;
-    std::vector<Node*> openNodes;
-    std::vector<Vector2i> deltas = { Vector2i(-1,0),Vector2i(1,0),Vector2i(0,-1),Vector2i(0,1) };
+    vector<Vector2i> path;
+    vector<Node*> openNodes;
+    vector<Vector2i> deltas = { Vector2i(-1,0),Vector2i(1,0),Vector2i(0,-1),Vector2i(0,1) };
     Node* current;
     Node* neighbour;
 
@@ -184,9 +171,8 @@ std::vector<Vector2i> Monster::aStarPathFind(int** maze, int mazeSize, const Vec
         nextNode = nextNode->parent;
         path.push_back(nextNode->gridPos);
     }
-
+    if(path.size() > 1)
     path.erase(path.begin());
-
     //---Чистимо пам'ять---//
     for (int i = 0; i < mazeSize; i++)
     {
@@ -228,6 +214,45 @@ void Monster::removeFromOpenAndClose(Node* node, std::vector<Node*>& openNodes)
         {
             openNodes.erase(iterNode);
             break;
+        }
+    }
+}
+
+void Monster::respawn(Map& map, const Vector2f& plPos, EntitySprite& sprite)
+{
+    float minDistToPlayer = float(map.cellSize / 3) * map.levelSize;
+    int i, j;
+    Vector2f newPos;
+    pathToPlayer.clear();
+
+    if (monsterLeft > NUMBER_OF_MONSTERS / 2)
+    {
+        sprite.loadSprite(PATH_WEAK_MONSTER, MONSTER_SPRITE_RES);
+        damage = 0.5;
+        speed = 2;
+        health = 20;
+    }
+    else {
+        sprite.loadSprite(PATH_STRONG_MONSTER, MONSTER_SPRITE_RES);
+        damage = 1.2;
+        speed = 3;
+        health = 50;
+    }
+
+    while (true) {
+        i = rand() % map.levelSize;
+        j = rand() % map.levelSize;
+
+        newPos = {
+            float(j + 0.5) * map.cellSize,
+            float(i + 0.5) * map.cellSize
+        };
+
+        if (!map.levelPlan[i][j] &&
+            sqrt(sqrDistance(newPos, plPos)) >
+            minDistToPlayer) {
+            position = newPos;
+            return;
         }
     }
 }

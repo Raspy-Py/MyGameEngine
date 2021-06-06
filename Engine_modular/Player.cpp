@@ -1,7 +1,17 @@
 #include "Player.h"
 
-Player::Player(float x, float y)
+Player::Player(int mapSize, int cellSize)
 {
+    float spawnCell;
+
+    mapSize -= 2;
+    mapSize /= 2;
+
+    if (!(mapSize & 1)) spawnCell = ++mapSize;
+    else spawnCell = mapSize;
+
+    position.x = float(spawnCell + 0.5) * cellSize;
+    position.y = float(spawnCell + 0.5) * cellSize;
 
     speed = PLAYER_DEFAULT_SPEED;
     strafeSpeed = STRAFE_SPEED;
@@ -10,8 +20,7 @@ Player::Player(float x, float y)
     health = PLAYER_DEFAULT_HEALTH;
     colBoxSize = PLAYER_COLISION_BOX_SIZE;
     direction = PI;
-    position.x = x;
-    position.y = y;
+    damage = PLAYER_DEFAULT_DAMAGE;
 
 }
 
@@ -19,7 +28,7 @@ Player::~Player()
 {
 }
 
-void Player::listenKeyboard(FPS& fps, Map& map, float* raysLenth, Vector2f monsterPos)
+void Player::listenKeyboard(FPS& fps, Map& map, float* raysLenth, Monster& monster)
 {
     speed = PLAYER_DEFAULT_SPEED;
 
@@ -29,15 +38,12 @@ void Player::listenKeyboard(FPS& fps, Map& map, float* raysLenth, Vector2f monst
     if      (Keyboard::isKeyPressed(Keyboard::W)) { moveForward(fps, map); } 
     else if (Keyboard::isKeyPressed(Keyboard::S)) { moveBackward(fps, map); } 
 
-    if (Keyboard::isKeyPressed(Keyboard::Space) { shoot}
-
-
-    if      (Keyboard::isKeyPressed(Keyboard::P)) { getInfo(); } // TODO: remove
+    if (Keyboard::isKeyPressed(Keyboard::Space)) { shoot(monster, raysLenth);}
 }
 
-void Player::takeDamage(int damage)
+void Player::takeDamage(float _damage)
 {
-    health -= damage;
+    health -= _damage;
 }
 
 void Player::rotateByMouse(FPS& fps, int delta)
@@ -52,9 +58,11 @@ void Player::rotateByMouse(FPS& fps, int delta)
 
 void Player::moveForward(FPS& fps, Map& map)
 {
+    float boost = 1;
+    if (Keyboard::isKeyPressed(Keyboard::LControl)) boost = 1.4;
 
-    float newX = position.x + speed * cos(direction) * fps.getFPS();
-    float newY = position.y + speed * sin(direction) * fps.getFPS();
+    float newX = position.x + speed * cos(direction) * fps.getFPS() * boost;
+    float newY = position.y + speed * sin(direction) * fps.getFPS() * boost;
 
     int oldQuadX = int(position.x) / map.cellSize;
     int oldQuadY = int(position.y) / map.cellSize;
@@ -165,18 +173,36 @@ void Player::turnRight(FPS& fps)
     }
 }
 
-void Player::getInfo()
+void Player::shoot(Monster& monster, float* zBuffer)
 {
-    system("cls");
-    cout << "<----Information about player---->" << endl;
+    Vector2f P = position;
+    Vector2f E = monster.getPosition();
+    Vector2f PE = E - P;
+    Vector2f M;
+    float k1, k2, b1, b2;
+    float pEM, pPE;
 
-    cout << "Position: (" <<position.x << ", "<< position.y << ")" << endl;
-    cout << "Direction: " << direction/ PI * 180  << endl;
-    cout << "Health: " << health << endl;
-    cout << "Speed: " << speed << " units/tick" << endl;
-    cout << "Ratation speed: " << rotationSpeed / PI * 180 <<" grad/tick" <<  endl;
 
-    cout << "<-------------------------------->" << endl;
+    // EM:
+    k1 = -(PE.x / PE.y);
+    b1 = (PE.x * E.x + PE.y * E.y) / PE.y;
+
+    // PM:
+    k2 = tan(direction);
+    b2 = P.y - tan(direction) * P.x;
+
+    // M:
+    M.x = (b2 - b1) / (k1 - k2);
+    M.y = (b2 * k1 - b1 * k2) / (k1 - k2);
+
+    pEM = sqrt((M.x - E.x) * (M.x - E.x) + (M.y - E.y) * (M.y - E.y));
+    pPE = sqrt(PE.x * PE.x + PE.y * PE.y);
+
+    if (pEM < MONSTER_SPRITE_RES / 2 &&
+        pPE < zBuffer[WIN_HALF_WIDTH] && 
+        cos(direction)*PE.x + sin(direction)*PE.y >= 0){
+        monster.setHealth(monster.getHealth() - damage); 
+    }
 }
 
 bool Player::isWallColided(float plX, float plY, Map& map)

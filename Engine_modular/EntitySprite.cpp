@@ -139,16 +139,16 @@ void EntitySprite::calculateSprite(Player& player, Vector2f entityPos)
 		enemyProjSize = float(MONSTER_SPRITE_RES) * WTP / distToEntityProj/2;
 
 		
-		leftSideColOnDisplay = centreColOnDisplay - enemyProjSize /2;
-		rightSideColOnDisplay = centreColOnDisplay + enemyProjSize / 2;
+		leftSideColOnDisplay = centreColOnDisplay - enemyProjSize;
+		rightSideColOnDisplay = centreColOnDisplay + enemyProjSize;
 		spriteLeftFirstCol = leftSideColOnDisplay;
 
 		numberOfCols = rightSideColOnDisplay - leftSideColOnDisplay;
 	
 
-		texPixelHeight = enemyProjSize / MONSTER_SPRITE_RES;
+		texPixelHeight = enemyProjSize / MONSTER_SPRITE_RES * 2;
 
-		spriteTopPos = WIN_HALF_HEIGHT - enemyProjSize / 2;
+		spriteTopPos = WIN_HALF_HEIGHT - enemyProjSize;
 
 		actualSprite.clear();
 

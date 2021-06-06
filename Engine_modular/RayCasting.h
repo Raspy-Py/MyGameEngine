@@ -4,6 +4,9 @@
 #include "Player.h"
 #include "Map.h"
 
+class Player;
+class Map;
+
 class RayCasting
 {
 public:

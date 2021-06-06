@@ -11,16 +11,18 @@ using namespace sf;
 using namespace std;
 
 class Map;
+class Monster;
 
 class Player : public Actor
 {
 public:
-	Player(float, float);
+	Player(int, int);
 	~Player();
 
-	void listenKeyboard(FPS&, Map&, float*, Vector2f);
-	void takeDamage(int);
+	void listenKeyboard(FPS&, Map&, float*, Monster&);
+	void takeDamage(float);
 	void rotateByMouse(FPS&, int);
+	void shoot(Monster&, float*);
 
 private:
 	int colBoxSize;
@@ -34,7 +36,6 @@ private:
 	void strafeLeft(FPS&, Map&);
 	void turnLeft(FPS&);
 	void turnRight(FPS&);
-	void getInfo();
 	bool isWallColided(float, float, Map&);
 	int limitRotationSpeed(int);
 };

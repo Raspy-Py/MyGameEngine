@@ -91,7 +91,7 @@ void Map::loadMap(int nParam, const string path)
 
     CircleShape enemyMarker;
     enemyMarker.setRadius(minimapCellSize / 2);
-    enemyMarker.setFillColor(Color(255, 204, 0));
+    enemyMarker.setFillColor(Color(218, 112, 214));
     enemyMarker.setOrigin(enemyMarker.getRadius(), enemyMarker.getRadius());
 
     enemyMarkers.push_back(enemyMarker);
@@ -198,8 +198,8 @@ void Map::updateMinimap(Player& player, Monster& monster, float** raysEndCords)
     float enemyX;
     float enemyY;
 
-    enemyX = monster.getMonstersList()[0]->getPosition().x - enemyMarkers[0].getRadius() * 2;
-    enemyY = monster.getMonstersList()[0]->getPosition().y - enemyMarkers[0].getRadius() * 2;
+    enemyX = monster.getPosition().x - enemyMarkers[0].getRadius() * 2;
+    enemyY = monster.getPosition().y - enemyMarkers[0].getRadius() * 2;
 
     enemyX *= minimapToMapRelation;
     enemyY *= minimapToMapRelation;
@@ -308,25 +308,13 @@ void Map::clearInfo()
 
 int** Map::genEmptyField(int n)
 {
-
-    if (!(n % 2))
-    {
-        cout << "Maze size should be odd number!" << endl;
-        return nullptr;
-    }
-    if (n < 3)
-    {
-        cout << "Maze size should be at least 3!" << endl;
-        return nullptr;
-    }
-
     int** maze = new int* [n];
     for (int i = 0; i < n; i++)
     {
         maze[i] = new int[n];
         for (int j = 0; j < n; j++)
         {
-            if (i % 2 && j % 2)
+            if (i & 1 && j & 1)
                 maze[i][j] = 0;
             else
                 maze[i][j] = 1;

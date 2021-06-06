@@ -1,4 +1,5 @@
 #pragma once
+#include "EntitySprite.h"
 #include "Actor.h"
 #include "FPSHandler.h"
 #include "Map.h"
@@ -23,6 +24,7 @@ struct Node {
 
 class Player;
 class Map;
+class EntitySprite;
 
 class Monster : public Actor
 {
@@ -31,12 +33,13 @@ public:
 	Monster();
 	~Monster();
 	
-	void makeStep(FPS&, Map&, Player&); // Монстер робить один крок
-	std::vector<Monster*>& getMonstersList(); // Повертає список живих монстрів
-	void painterSort(const Vector2f&); // Сортує масив монстрів за віддаленістю від гравця
-private:
-	static std::vector<Monster*> monstersList; // Масив живих монстрів
+	static int monsterLeft;
 
+	void checkStatus(Player&, Map&, EntitySprite&); // Первірка стану монстра та виконання відповідних дій
+	void makeStep(FPS&, Map&, Player&); // Монстер робить один крок
+	void respawn(Map&, const Vector2f&, EntitySprite&); // Створює нового монстра
+	
+private:
 	std::vector<Vector2i> pathToPlayer; // Вектор клітинок, через які проходить шлях до гравця
 	Vector2i playerLastPosition; // Позиція гравця на попередній ітерації
 	float sqrDistance(const Vector2f&, const Vector2f&); // Квадрат відстані між точками

@@ -28,12 +28,14 @@ private:
 	void mainMenu();
 	void levelCreationMenu();
 	void levelChooseMenu();
+	void endgameMenu();
 
 	enum Mode {
 		MAIN_MENU,
 		LEVEL_CREATION_MENU,
 		LEVEL_CHOOSE_MENU,
-		START_LEVEL
+		START_LEVEL,
+		END_GAME
 	};
 	int toDisplay;
 
@@ -43,9 +45,11 @@ private:
 	RenderWindow window;
 	Map map;
 	Font menuFont;
+	Text gameResultText;
 	Sprite background;
     Texture backgroundTexture;
 	RenderImage render;
+	VertexArray playerHealthIndicator;
 
 	////////////////////////////////////////////////
 	// 	Параметри попередньго перегляду рівня     //
@@ -75,6 +79,8 @@ private:
 	std::vector<std::string> wallTexturePath;
 
 	Color& stringToColor(std::string);
+	bool checkGameStatus(Player&, Monster&);
+	void updateIndicator(float);
 	void loadTemplates();
 	void unloadTemplates();
 	void switchTemplate(int);
